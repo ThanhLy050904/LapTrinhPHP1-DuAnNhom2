@@ -2,12 +2,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 mb-4">
-                <h4 class="fw-bold mb-3">            
-                <img src="Views/image/th.webp" width="35" class="d-inline-block align-text-top">
-                KENZIE
-            </h4>
+                <h4 class="fw-bold mb-3">
+                    <img src="Views/image/th.webp" width="35" class="d-inline-block align-text-top">
+                    KENZIE
+                </h4>
                 <p class="text-secondary">
-                    Mang đến phong cách thời trang trẻ trung, hiện đại và thoải mái nhất cho bạn mỗi ngày. Chất lượng là ưu tiên hàng đầu của chúng tôi.
+                    Mang đến phong cách thời trang trẻ trung, hiện đại và thoải mái nhất cho bạn mỗi ngày. Chất lượng là
+                    ưu tiên hàng đầu của chúng tôi.
                 </p>
                 <div class="d-flex gap-3 mt-3">
                     <a href="#" class="text-white fs-4"><i class="fab fa-facebook"></i></a>
@@ -19,10 +20,14 @@
             <div class="col-md-4 mb-4">
                 <h5 class="fw-bold mb-3">Khám phá</h5>
                 <ul class="list-unstyled">
-                    <li class="mb-2"><a href="?pages=home" class="text-decoration-none text-secondary hover-link">Trang chủ</a></li>
-                    <li class="mb-2"><a href="?pages=san-pham" class="text-decoration-none text-secondary hover-link">Sản phẩm mới</a></li>
-                    <li class="mb-2"><a href="?pages=gio-hang" class="text-decoration-none text-secondary hover-link">Giỏ hàng của bạn</a></li>
-                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-link">Chính sách bảo mật</a></li>
+                    <li class="mb-2"><a href="?pages=home" class="text-decoration-none text-secondary hover-link">Trang
+                            chủ</a></li>
+                    <li class="mb-2"><a href="?pages=san-pham"
+                            class="text-decoration-none text-secondary hover-link">Sản phẩm mới</a></li>
+                    <li class="mb-2"><a href="?pages=gio-hang"
+                            class="text-decoration-none text-secondary hover-link">Giỏ hàng của bạn</a></li>
+                    <li class="mb-2"><a href="#" class="text-decoration-none text-secondary hover-link">Chính sách bảo
+                            mật</a></li>
                 </ul>
             </div>
 

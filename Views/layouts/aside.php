@@ -1,21 +1,20 @@
 <style>
-    /* Bo góc và làm nổi bật carousel */
     .carousel-inner {
         border-radius: 15px;
         overflow: hidden;
-        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
 
     .carousel-item img {
         height: 500px;
         object-fit: cover;
-        filter: brightness(0.8); /* Làm tối ảnh một chút để chữ nổi bật */
+        filter: brightness(0.8);
         transition: transform 0.5s ease;
     }
 
-    /* Hiệu ứng chữ đẹp hơn */
+
     .carousel-caption {
-        background: rgba(0, 0, 0, 0.4); /* Nền mờ cho chữ */
+        background: rgba(0, 0, 0, 0.4);
         padding: 20px;
         border-radius: 10px;
     }
@@ -36,7 +35,6 @@
     </div>
 
     <div class="carousel-inner">
-        <!-- Slide 1 -->
         <div class="carousel-item active">
             <img src="Views/image/38f822d4-762a-44c9-9612-38359ee6bbd5.jpg" class="d-block w-100" alt="Bộ sưu tập mới">
             <div class="carousel-caption">
@@ -45,7 +43,6 @@
             </div>
         </div>
 
-        <!-- Slide 2 -->
         <div class="carousel-item">
             <img src="Views/image/bannerhoodie.png" class="d-block w-100" alt="Hoodie cá tính">
             <div class="carousel-caption">
@@ -54,7 +51,6 @@
             </div>
         </div>
 
-        <!-- Slide 3 -->
         <div class="carousel-item">
             <img src="Views/image/banner jean.png" class="d-block w-100" alt="Jeans đẳng cấp">
             <div class="carousel-caption">
