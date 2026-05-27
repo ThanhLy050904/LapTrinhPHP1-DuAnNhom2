@@ -3,6 +3,7 @@
 ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
+ob_start();
 
 $page = $_GET['pages'] ?? 'home';
 
@@ -15,6 +16,7 @@ $cssFiles = [
     'lien-he' => 'lien-he.css',
     'dang-nhap' => 'auth.css',
     'dang-ky' => 'auth.css',
+    'admin' => 'admin.css',
 ];
 
 // ================= MODELS =================
@@ -58,8 +60,9 @@ require_once "controllers/CheckoutController.php";
 </head>
 
 <body>
-
-<?php include "Views/layouts/header.php"; ?>
+<?php if ($page !== 'admin') : ?>
+    <?php include "Views/layouts/header.php"; ?>
+<?php endif; ?>
 
 <?php
 switch ($page) {
