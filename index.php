@@ -17,6 +17,8 @@ $cssFiles = [
     'dang-nhap' => 'auth.css',
     'dang-ky' => 'auth.css',
     'admin' => 'admin.css',
+    'quen-mat-khau' => 'auth.css',
+    'tai-khoan-cua-toi' => 'tai-khoan-cua-toi.css'
 ];
 
 // ================= MODELS =================
@@ -98,6 +100,14 @@ switch ($page) {
 
     case "dang-ky":
         require "Views/pages/dang-ky.php";
+        break;
+
+    case "quen-mat-khau":
+        require "Views/pages/quen-mat-khau.php";
+        break;
+
+    case "tai-khoan-cua-toi":
+        require "Views/pages/tai-khoan-cua-toi.php";
         break;
 
     case "lien-he":

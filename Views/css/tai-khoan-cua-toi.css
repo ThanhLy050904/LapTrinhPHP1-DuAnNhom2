@@ -1,0 +1,12 @@
+.card { border-radius: 15px; } 
+.btn-success { background-color: #28a745; border: none; }
+.card-header { background-color: #f8f9fa; border-bottom: none; }
+.rounded-circle:hover { transform: scale(1.05); transition: 0.3s; }
+.avatar-style {
+    width: 120px;   
+    height: 120px; 
+    object-fit: cover;  
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto;    
+}

@@ -2,3 +2,66 @@
     border-radius: 20px;
     box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
+
+.forgot-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f4f7f6;
+}
+
+
+.forgot-card {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.forgot-card h2 { margin-bottom: 0.5rem; color: #333; }
+.forgot-card p { color: #777; margin-bottom: 1.5rem; font-size: 0.9rem; }
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box; 
+    transition: 0.3s;
+}
+
+input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,123,255,0.2);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover { background: #0056b3; }
+
+.back-link {
+    display: block;
+    margin-top: 1.5rem;
+    color: #007bff;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.back-link:hover { text-decoration: underline; }

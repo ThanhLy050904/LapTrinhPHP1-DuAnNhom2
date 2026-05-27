@@ -21,9 +21,7 @@
                                 Email
                             </label>
 
-                            <input type="email"
-                                class="form-control"
-                                placeholder="Nhập email">
+                            <input type="email" class="form-control" placeholder="Nhập email">
 
                         </div>
 
@@ -33,14 +31,15 @@
                                 Mật khẩu
                             </label>
 
-                            <input type="password"
-                                class="form-control"
-                                placeholder="Nhập mật khẩu">
+                            <input type="password" class="form-control" placeholder="Nhập mật khẩu">
 
                         </div>
-
-                        <button type="submit"
-                            class="btn btn-primary w-100">
+                        <div class="text-end mt-1">
+                            <a href="?pages=quen-mat-khau" class="text-decoration-none small">
+                                Quên mật khẩu?
+                            </a>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100">
                             Đăng nhập
                         </button>
 
