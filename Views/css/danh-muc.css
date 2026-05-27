@@ -1,0 +1,62 @@
+/* ====================== DANH MỤC PAGE ====================== */
+
+.category-btn {
+    border-radius: 30px;
+    padding: 10px 24px;
+    text-decoration: none;
+    border: 2px solid black;
+    color: black;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.category-btn:hover {
+    background: black;
+    color: white;
+}
+
+.category-btn.active {
+    background: black;
+    color: white;
+}
+
+.product-card {
+    border: none;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+}
+
+.product-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    display: block;
+}
+
+.card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.price {
+    color: #dc3545;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.btn-detail {
+    border-radius: 10px;
+}

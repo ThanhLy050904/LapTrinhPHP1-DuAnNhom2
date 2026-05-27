@@ -1,0 +1,16 @@
+.cart-image {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 16px;
+}
+
+.quantity-input {
+    width: 80px;
+}
+
+.cart-total {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #dc3545;
+}
