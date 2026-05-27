@@ -2,7 +2,6 @@
 
 class ProductController
 {
-
     protected $productModel;
 
     public function __construct()
@@ -18,15 +17,17 @@ class ProductController
         // PRODUCT
         $product = $this->productModel->find($id);
 
-        // COLORS
-        $colors =
-            $this->productModel->getColors($id);
+        // RELATED PRODUCTS
+        $relatedProducts = [];
 
-        // VIEW
-        require "Views/layouts/header.php";
+        if ($product) {
+            $relatedProducts =
+                $this->productModel->getByCategory(
+                    $product['category_slug']
+                );
+        }
 
         require "Views/pages/chi-tiet-san-pham.php";
 
-        require "Views/layouts/footer.php";
     }
 }
