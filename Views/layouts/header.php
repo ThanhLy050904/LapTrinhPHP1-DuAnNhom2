@@ -44,7 +44,6 @@
                     <a href="?pages=dang-ky" class="btn btn-register">Đăng ký</a>
 
                 </div>
-
             </div>
         </div>
     </nav>
