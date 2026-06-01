@@ -133,8 +133,6 @@ switch ($page) {
         echo "<h1>404 NOT FOUND</h1>";
         break;
 }
-
-include "Views/layouts/footer.php";
 ?>
 
 </body>

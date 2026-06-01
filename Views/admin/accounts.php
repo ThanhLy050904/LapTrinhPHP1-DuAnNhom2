@@ -29,17 +29,17 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
     </div>
 
     <?php if ($adminAction === 'add' || $adminAction === 'edit'): ?>
-        <div class="admin-card" style="margin-bottom:24px; padding:24px;">
+        <div class="admin-form-card">
             <h3><?= $adminAction === 'edit' ? 'Chỉnh sửa tài khoản' : 'Thêm tài khoản mới' ?></h3>
             <form method="post">
                 <input type="hidden" name="admin_form" value="accounts">
                 <input type="hidden" name="id" value="<?= $accountEdit['id'] ?? '' ?>">
-                <div style="display:grid;grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;">
-                    <input name="name" placeholder="Tên người dùng" value="<?= htmlspecialchars($accountEdit['name'] ?? '', ENT_QUOTES) ?>" required>
-                    <input name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($accountEdit['email'] ?? '', ENT_QUOTES) ?>" required>
-                    <input name="role" placeholder="Vai trò" value="<?= htmlspecialchars($accountEdit['role'] ?? '', ENT_QUOTES) ?>" required>
+                <div class="form-grid">
+                    <input class="form-control" name="name" placeholder="Tên người dùng" value="<?= htmlspecialchars($accountEdit['name'] ?? '', ENT_QUOTES) ?>" required>
+                    <input class="form-control" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($accountEdit['email'] ?? '', ENT_QUOTES) ?>" required>
+                    <input class="form-control span-full" name="role" placeholder="Vai trò" value="<?= htmlspecialchars($accountEdit['role'] ?? '', ENT_QUOTES) ?>" required>
                 </div>
-                <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+                <div class="form-actions">
                     <button class="btn-primary" type="submit">Lưu</button>
                     <a class="btn-secondary" href="?pages=admin&section=accounts">Hủy</a>
                 </div>
