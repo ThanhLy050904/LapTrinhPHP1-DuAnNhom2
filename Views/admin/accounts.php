@@ -67,7 +67,7 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
                         <td><?= htmlspecialchars($account['role'], ENT_QUOTES) ?></td>
                         <td>
                             <a class="btn-secondary" href="?pages=admin&section=accounts&action=edit&id=<?= $account['id'] ?>">Sửa</a>
-                            <a class="btn-danger" href="?pages=admin&section=accounts&action=delete&id=<?= $account['id'] ?>">Xóa</a>
+                            <a class="btn-danger" href="?pages=admin&section=accounts&action=delete&id=<?= $account['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?');">Xóa</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

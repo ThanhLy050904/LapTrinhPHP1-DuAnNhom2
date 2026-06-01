@@ -28,21 +28,23 @@ if ($adminAction === 'edit' && isset($_GET['code'])) {
     </div>
 
     <?php if ($adminAction === 'edit' && $orderEdit): ?>
-        <div class="admin-card" style="margin-bottom:24px; padding:24px;">
+        <div class="admin-form-card">
             <h3>Chỉnh sửa đơn hàng <?= htmlspecialchars($orderEdit['code'], ENT_QUOTES) ?></h3>
             <form method="post">
                 <input type="hidden" name="admin_form" value="orders">
                 <input type="hidden" name="code" value="<?= htmlspecialchars($orderEdit['code'], ENT_QUOTES) ?>">
-                <div style="display:grid;grid-template-columns:1fr 1fr; gap:16px; margin-top:18px;">
-                    <input name="customer" placeholder="Tên khách hàng" value="<?= htmlspecialchars($orderEdit['customer'] ?? '', ENT_QUOTES) ?>" required>
-                    <input name="total" placeholder="Tổng tiền" value="<?= htmlspecialchars($orderEdit['total'] ?? '', ENT_QUOTES) ?>" required>
-                    <select name="status" required>
+
+                <div class="form-grid">
+                    <input class="form-control" name="customer" placeholder="Tên khách hàng" value="<?= htmlspecialchars($orderEdit['customer'] ?? '', ENT_QUOTES) ?>" required>
+                    <input class="form-control" name="total" placeholder="Tổng tiền" value="<?= htmlspecialchars($orderEdit['total'] ?? '', ENT_QUOTES) ?>" required>
+                    <select class="form-control span-full" name="status" required>
                         <option value="Đang chờ" <?= ($orderEdit['status'] ?? '') === 'Đang chờ' ? 'selected' : '' ?>>Đang chờ</option>
                         <option value="Đang giao" <?= ($orderEdit['status'] ?? '') === 'Đang giao' ? 'selected' : '' ?>>Đang giao</option>
                         <option value="Hoàn thành" <?= ($orderEdit['status'] ?? '') === 'Hoàn thành' ? 'selected' : '' ?>>Hoàn thành</option>
                     </select>
                 </div>
-                <div style="margin-top:16px; display:flex; gap:12px; flex-wrap:wrap;">
+
+                <div class="form-actions">
                     <button class="btn-primary" type="submit">Lưu</button>
                     <a class="btn-secondary" href="?pages=admin&section=orders">Hủy</a>
                 </div>
@@ -70,7 +72,7 @@ if ($adminAction === 'edit' && isset($_GET['code'])) {
                         <td><?= htmlspecialchars($order['total'], ENT_QUOTES) ?></td>
                         <td>
                             <a class="btn-secondary" href="?pages=admin&section=orders&action=edit&code=<?= urlencode($order['code']) ?>">Sửa</a>
-                            <a class="btn-danger" href="?pages=admin&section=orders&action=delete&code=<?= urlencode($order['code']) ?>">Xóa</a>
+                            <a class="btn-danger" href="?pages=admin&section=orders&action=delete&code=<?= urlencode($order['code']) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">Xóa</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

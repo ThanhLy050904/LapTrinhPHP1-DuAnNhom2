@@ -172,7 +172,7 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
                         <td><?= htmlspecialchars($category['name'], ENT_QUOTES) ?></td>
                         <td>
                             <a class="btn-secondary" href="?pages=admin&section=categories&action=edit&id=<?= $category['id'] ?>">Sửa</a>
-                            <a class="btn-danger" href="?pages=admin&section=categories&action=delete&id=<?= $category['id'] ?>">Xóa</a>
+                            <a class="btn-danger" href="?pages=admin&section=categories&action=delete&id=<?= $category['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa danh mục này?');">Xóa</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>

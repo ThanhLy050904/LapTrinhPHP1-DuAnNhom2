@@ -46,6 +46,24 @@ $defaultAdminData = [
             'status' => 'Đang giao',
             'total' => '3.600.000 đ',
         ],
+        [
+            'code' => 'DH004',
+            'customer' => 'Phạm Thị D',
+            'status' => 'Đang chờ',
+            'total' => '750.000 đ',
+        ],
+        [
+            'code' => 'DH005',
+            'customer' => 'Trần Văn E',
+            'status' => 'Đang giao',
+            'total' => '1.980.000 đ',
+        ],
+        [
+            'code' => 'DH006',
+            'customer' => 'Ngô Thị F',
+            'status' => 'Hoàn thành',
+            'total' => '420.000 đ',
+        ],
     ],
     'categories' => [
         ['id' => 1, 'name' => 'Thời trang'],
@@ -69,6 +87,18 @@ $adminOrders = &$adminData['orders'];
 $adminCategories = &$adminData['categories'];
 $adminAccounts = &$adminData['accounts'];
 $adminStats = &$adminData['stats'];
+
+// If session already existed but has few orders, append sample orders so tests immediately show data
+$sampleOrders = [
+    ['code' => 'DH004', 'customer' => 'Phạm Thị D', 'status' => 'Đang chờ', 'total' => '750.000 đ'],
+    ['code' => 'DH005', 'customer' => 'Trần Văn E', 'status' => 'Đang giao', 'total' => '1.980.000 đ'],
+    ['code' => 'DH006', 'customer' => 'Ngô Thị F', 'status' => 'Hoàn thành', 'total' => '420.000 đ'],
+];
+foreach ($sampleOrders as $s) {
+    if (admin_get_order_index($adminOrders, $s['code']) === -1) {
+        $adminOrders[] = $s;
+    }
+}
 
 function admin_get_next_id(array $items): int
 {
