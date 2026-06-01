@@ -5,7 +5,10 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ob_start();
 
+session_start(); // ✅ nên đặt ở đầu luôn
+
 $page = $_GET['pages'] ?? 'home';
+$action = $_GET['action'] ?? null;
 
 $cssFiles = [
     'home' => 'home.css',
@@ -42,19 +45,12 @@ require_once "controllers/CheckoutController.php";
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>KENZIE</title>
 
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
-    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-    <!-- CSS chung -->
     <link rel="stylesheet" href="Views/css/header.css">
 
-    <!-- CSS theo trang -->
     <?php if (isset($cssFiles[$page])): ?>
         <link rel="stylesheet" href="Views/css/<?= $cssFiles[$page] ?>">
     <?php endif; ?>
@@ -62,6 +58,7 @@ require_once "controllers/CheckoutController.php";
 </head>
 
 <body>
+
 <?php if ($page !== 'admin') : ?>
     <?php include "Views/layouts/header.php"; ?>
 <?php endif; ?>
@@ -89,9 +86,23 @@ switch ($page) {
         $controller->index();
         break;
 
+    // ================= THANH TOÁN =================
     case "thanh-toan":
+
         $controller = new CheckoutController();
-        $controller->index();
+
+        if ($action === "place-order") {
+            $controller->placeOrder(); // ✅ bấm đặt hàng
+        } else {
+            $controller->index(); // xem trang thanh toán
+        }
+
+        break;
+
+    // ================= THANK YOU =================
+    case "thank-you":
+        $order = $_SESSION['order'] ?? null;
+        require "Views/pages/thank-you.php";
         break;
 
     case "dang-nhap":

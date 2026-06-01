@@ -60,3 +60,7 @@
 .btn-detail {
     border-radius: 10px;
 }
+.btn-detail:hover {
+    background: #62dc35;
+    color: white;
+}
