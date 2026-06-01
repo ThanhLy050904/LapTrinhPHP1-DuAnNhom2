@@ -6,6 +6,79 @@ $news = $news ?? [];
 ?>
 
 <main>
+    <div id="homeBanner" class="carousel slide mb-5" data-bs-ride="carousel">
+
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#homeBanner" data-bs-slide-to="0" class="active"></button>
+        <button type="button" data-bs-target="#homeBanner" data-bs-slide-to="1"></button>
+        <button type="button" data-bs-target="#homeBanner" data-bs-slide-to="2"></button>
+    </div>
+
+    <div class="carousel-inner">
+
+        <div class="carousel-item active">
+            <img src="Views/image/banner1.png"
+                 class="d-block w-100 banner-img"
+                 alt="Banner 1">
+
+            <div class="carousel-caption">
+                <h2>BST Mùa Hè 2026</h2>
+                <p>Giảm giá lên đến 50%</p>
+                <a href="?pages=danh-muc" class="btn btn-light">
+                    Mua ngay
+                </a>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="Views/image/banner2.png"
+                 class="d-block w-100 banner-img"
+                 alt="Banner 2">
+
+            <div class="carousel-caption">
+                <h2>Áo Hoodie Hot Trend</h2>
+                <p>Phong cách trẻ trung năng động</p>
+                <a href="?pages=danh-muc" class="btn btn-light">
+                    Khám phá
+                </a>
+            </div>
+        </div>
+
+        <div class="carousel-item">
+            <img src="Views/image/banner3.png"
+                 class="d-block w-100 banner-img"
+                 alt="Banner 3">
+
+            <div class="carousel-caption">
+                <h2>Freeship Toàn Quốc</h2>
+                <p>Cho đơn hàng từ 299.000đ</p>
+                <a href="?pages=danh-muc" class="btn btn-light">
+                    Xem ngay
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="carousel-control-prev"
+            type="button"
+            data-bs-target="#homeBanner"
+            data-bs-slide="prev">
+
+        <span class="carousel-control-prev-icon"></span>
+
+    </button>
+
+    <button class="carousel-control-next"
+            type="button"
+            data-bs-target="#homeBanner"
+            data-bs-slide="next">
+
+        <span class="carousel-control-next-icon"></span>
+
+    </button>
+
+</div>
 
 <!-- ================= CATEGORY ================= -->
 <div class="container my-5 text-center">

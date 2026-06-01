@@ -11,7 +11,7 @@ $page = $_GET['pages'] ?? 'home';
 $action = $_GET['action'] ?? null;
 
 $cssFiles = [
-    'home' => 'home.css',
+    'home' => 'home.css','home1' => 'home.css',
     'danh-muc' => 'danh-muc.css',
     'chi-tiet-san-pham' => 'chi-tiet-san-pham.css',
     'gio-hang' => 'gio-hang.css',
