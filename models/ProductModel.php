@@ -1,10 +1,13 @@
 <?php
 
-class ProductModel extends BaseModel {
+require_once __DIR__ . '/BaseModel.php';
 
-    // ALL PRODUCTS
+class ProductModel extends BaseModel
+{
     public function getAll()
     {
+        $conn = $this->connect();
+
         $sql = "
             SELECT products.*,
                    categories.name AS category_name
@@ -13,14 +16,15 @@ class ProductModel extends BaseModel {
             ON products.category_id = categories.id
         ";
 
-        $result = $this->conn->query($sql);
+        $stmt = $conn->query($sql);
 
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // FIND PRODUCT + lấy slug category
     public function find($id)
     {
+        $conn = $this->connect();
+
         $sql = "
             SELECT products.*,
                    categories.name AS category_name,
@@ -28,43 +32,49 @@ class ProductModel extends BaseModel {
             FROM products
             LEFT JOIN categories
             ON products.category_id = categories.id
-            WHERE products.id = $id
+            WHERE products.id = ?
         ";
 
-        $result = $this->conn->query($sql);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$id]);
 
-        return $result->fetch_assoc();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // SẢN PHẨM CÙNG DANH MỤC
     public function getByCategory($slug)
     {
+        $conn = $this->connect();
+
         $sql = "
             SELECT products.*,
                    categories.name AS category_name
             FROM products
             JOIN categories
             ON products.category_id = categories.id
-            WHERE categories.slug = '$slug'
+            WHERE categories.slug = ?
         ";
 
-        $result = $this->conn->query($sql);
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$slug]);
 
-        return $result->fetch_all(MYSQLI_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     public function getFeaturedProducts()
-{
-    $sql = "
-        SELECT products.*,
-               categories.name AS category_name
-        FROM products
-        LEFT JOIN categories
-        ON products.category_id = categories.id
-        WHERE products.is_hot = 1
-    ";
+    {
+        $conn = $this->connect();
 
-    $result = $this->conn->query($sql);
+        $sql = "
+            SELECT products.*,
+                   categories.name AS category_name
+            FROM products
+            LEFT JOIN categories
+            ON products.category_id = categories.id
+            WHERE products.is_hot = 1
+        ";
 
-    return $result->fetch_all(MYSQLI_ASSOC);
-}
+        $stmt = $conn->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

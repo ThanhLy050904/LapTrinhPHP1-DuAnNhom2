@@ -1,16 +1,17 @@
 <?php
 
-class CategoryModel extends BaseModel {
+require_once __DIR__ . '/BaseModel.php';
 
+class CategoryModel extends BaseModel
+{
     public function getAll()
     {
-        $sql =
-        "SELECT * FROM categories";
+        $conn = $this->connect();
 
-        $result =
-        $this->conn->query($sql);
+        $sql = "SELECT * FROM categories";
 
-        return
-        $result->fetch_all(MYSQLI_ASSOC);
+        $stmt = $conn->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
