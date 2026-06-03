@@ -1,0 +1,16 @@
+.gioi-thieu-container img {
+    transition: transform 0.3s ease;
+}
+.gioi-thieu-container img:hover {
+    transform: scale(1.02);
+}
+.card-img-top {
+    border: 5px solid #f8f9fa;
+    margin-bottom: 15px;
+}
+.btn-outline-light:hover {
+    background-color: #fff;
+    color: #212529; /* Màu đen */
+    transform: translateY(-3px);
+    transition: 0.3s;
+}

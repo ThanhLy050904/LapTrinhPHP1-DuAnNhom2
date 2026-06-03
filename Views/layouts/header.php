@@ -17,17 +17,23 @@
                 <ul class="navbar-nav mx-auto">
                     <li class="nav-item">
                         <a class="nav-link <?= ($_GET['pages'] ?? 'home') == 'home' ? 'active' : '' ?>"
-                           href="?pages=home">Home</a>
+                            href="?pages=home">Home</a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['pages'] ?? '') == 'gioi-thieu' ? 'active' : '' ?>"
+                            href="?pages=gioi-thieu">Giới thiệu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['pages'] ?? '') == 'tin-tuc' ? 'active' : '' ?>"
+                            href="?pages=tin-tuc">Tin tức</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link <?= ($_GET['pages'] ?? '') == 'danh-muc' ? 'active' : '' ?>"
-                           href="?pages=danh-muc">Sản phẩm</a>
+                            href="?pages=danh-muc">Sản phẩm</a>
                     </li>
-
                     <li class="nav-item">
                         <a class="nav-link <?= ($_GET['pages'] ?? '') == 'lien-he' ? 'active' : '' ?>"
-                           href="?pages=lien-he">Liên hệ</a>
+                            href="?pages=lien-he">Liên hệ</a>
                     </li>
                 </ul>
 
