@@ -22,7 +22,11 @@ $cssFiles = [
     'dang-ky' => 'auth.css',
     'admin' => 'admin.css',
     'quen-mat-khau' => 'auth.css',
-    'tai-khoan-cua-toi' => 'tai-khoan-cua-toi.css'
+    'tai-khoan-cua-toi' => 'tai-khoan-cua-toi.css',
+    'gioi-thieu' => 'gioi-thieu.css',
+    'tin-tuc' => 'tin-tuc.css',
+    'tin-tuc-detail' => 'tin-tuc.css',
+
 ];
 
 // ================= MODELS =================
