@@ -5,8 +5,13 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ob_start();
 
-session_start(); 
-
+session_start();
+function checkAdmin()
+{
+    if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
+        die("<h1>403 - Truy cập bị từ chối! Bạn không có quyền truy cập trang này.</h1>");
+    }
+}
 $page = $_GET['pages'] ?? 'home';
 $action = $_GET['action'] ?? null;
 
@@ -26,7 +31,6 @@ $cssFiles = [
     'gioi-thieu' => 'gioi-thieu.css',
     'tin-tuc' => 'tin-tuc.css',
     'tin-tuc-detail' => 'tin-tuc.css',
-
 ];
 
 // ================= MODELS =================
@@ -115,9 +119,10 @@ require_once "controllers/AuthController.php";
 
         case "dang-nhap":
             $auth = new AuthController();
-
             if ($action === 'login') {
                 $auth->login();
+            } elseif ($action === 'logout') {
+                $auth->logout();
             } else {
                 $auth->showLoginForm();
             }
@@ -140,7 +145,20 @@ require_once "controllers/AuthController.php";
             require "Views/pages/lien-he.php";
             break;
 
+        case "tin-tuc":
+            require "Views/pages/tin-tuc.php";
+            break;
+
+        case "tin-tuc-detail":
+            require "Views/pages/tin-tuc-detail.php";
+            break;
+
+        case "gioi-thieu":
+            require "Views/pages/gioi-thieu.php";
+            break;
+
         case "admin":
+            checkAdmin(); // Bảo vệ trang admin
             require "Views/admin/dashboard.php";
             break;
 

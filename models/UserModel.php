@@ -26,4 +26,10 @@ class UserModel extends BaseModel {
         $stmt->execute([':email' => $email]);
         return $stmt->fetch() ? true : false;
     }
+    public function getUserByEmail($email) {
+        $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }

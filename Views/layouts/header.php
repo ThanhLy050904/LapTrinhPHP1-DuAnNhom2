@@ -38,17 +38,38 @@
                 </ul>
 
                 <div class="d-flex align-items-center gap-3">
-
                     <form class="search-box">
                         <input class="form-control search-input" type="search" placeholder="Tìm sản phẩm...">
-                        <button class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
+                        <button class="search-btn"><i class="fas fa-search"></i></button>
                     </form>
 
-                    <a href="?pages=dang-nhap" class="btn btn-login">Đăng nhập</a>
-                    <a href="?pages=dang-ky" class="btn btn-register">Đăng ký</a>
+                    <?php if (isset($_SESSION['user'])): ?>
+                        <div class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle fa-lg"></i>
+                                <?= htmlspecialchars($_SESSION['user']['full_name']) ?>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="?pages=tai-khoan-cua-toi">Tài khoản của tôi</a></li>
 
+                                <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] == 'admin'): ?>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-primary" href="?pages=admin">Trang quản trị</a></li>
+                                <?php endif; ?>
+
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item text-danger" href="?pages=dang-nhap&action=logout">Đăng xuất</a>
+                                </li>
+                            </ul>
+                        </div>
+                    <?php else: ?>
+                        <a href="?pages=dang-nhap" class="btn btn-login">Đăng nhập</a>
+                        <a href="?pages=dang-ky" class="btn btn-register">Đăng ký</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
