@@ -5,13 +5,14 @@ ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 ob_start();
 
-session_start(); // ✅ nên đặt ở đầu luôn
+session_start(); 
 
 $page = $_GET['pages'] ?? 'home';
 $action = $_GET['action'] ?? null;
 
 $cssFiles = [
-    'home' => 'home.css','home1' => 'home.css',
+    'home' => 'home.css',
+    'home1' => 'home.css',
     'danh-muc' => 'danh-muc.css',
     'chi-tiet-san-pham' => 'chi-tiet-san-pham.css',
     'gio-hang' => 'gio-hang.css',
@@ -49,7 +50,8 @@ require_once "controllers/AuthController.php";
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="Views/css/header.css">
 
@@ -61,89 +63,91 @@ require_once "controllers/AuthController.php";
 
 <body>
 
-<?php if ($page !== 'admin') : ?>
-    <?php include "Views/layouts/header.php"; ?>
-<?php endif; ?>
+    <?php if ($page !== 'admin'): ?>
+        <?php include "Views/layouts/header.php"; ?>
+    <?php endif; ?>
 
-<?php
-switch ($page) {
+    <?php
+    switch ($page) {
 
-    case "home":
-        $controller = new HomeController();
-        $controller->index();
-        break;
+        case "home":
+            $controller = new HomeController();
+            $controller->index();
+            break;
 
-    case "chi-tiet-san-pham":
-        $controller = new ProductController();
-        $controller->show();
-        break;
+        case "chi-tiet-san-pham":
+            $controller = new ProductController();
+            $controller->show();
+            break;
 
-    case "danh-muc":
-        $controller = new CategoryController();
-        $controller->index();
-        break;
+        case "danh-muc":
+            $controller = new CategoryController();
+            $controller->index();
+            break;
 
-    case "gio-hang":
-        $controller = new CartController();
-        $controller->index();
-        break;
+        case "gio-hang":
+            $controller = new CartController();
+            $controller->index();
+            break;
 
-    // ================= THANH TOÁN =================
-    case "thanh-toan":
+        // ================= THANH TOÁN =================
+        case "thanh-toan":
 
-        $controller = new CheckoutController();
+            $controller = new CheckoutController();
 
-        if ($action === "place-order") {
-            $controller->placeOrder(); // ✅ bấm đặt hàng
-        } else {
-            $controller->index(); // xem trang thanh toán
-        }
+            if ($action === "place-order") {
+                $controller->placeOrder(); // ✅ bấm đặt hàng
+            } else {
+                $controller->index(); // xem trang thanh toán
+            }
 
-        break;
+            break;
 
-    // ================= THANK YOU =================
-    case "thank-you":
-        $order = $_SESSION['order'] ?? null;
-        require "Views/pages/thank-you.php";
-        break;
+        // ================= THANK YOU =================
+        case "thank-you":
+            $order = $_SESSION['order'] ?? null;
+            require "Views/pages/thank-you.php";
+            break;
 
         case "dang-nhap":
-        $auth = new AuthController();
-        
-        if ($action === 'login') {
-            $auth->login();
-        } else {
-            $auth->showLoginForm();
-        }
-        break;
+            $auth = new AuthController();
 
-    case "dang-ky":
-        require "Views/pages/dang-ky.php";
-        break;
+            if ($action === 'login') {
+                $auth->login();
+            } else {
+                $auth->showLoginForm();
+            }
+            break;
 
-    case "quen-mat-khau":
-        require "Views/pages/quen-mat-khau.php";
-        break;
+        case "dang-ky":
+            $controller = new AuthController();
+            $controller->register();
+            break;
 
-    case "tai-khoan-cua-toi":
-        require "Views/pages/tai-khoan-cua-toi.php";
-        break;
+        case "quen-mat-khau":
+            require "Views/pages/quen-mat-khau.php";
+            break;
 
-    case "lien-he":
-        require "Views/pages/lien-he.php";
-        break;
+        case "tai-khoan-cua-toi":
+            require "Views/pages/tai-khoan-cua-toi.php";
+            break;
 
-    case "admin":
-        require "Views/admin/dashboard.php";
-        break;
+        case "lien-he":
+            require "Views/pages/lien-he.php";
+            break;
 
-    default:
-        echo "<h1>404 NOT FOUND</h1>";
-        break;
-}
+        case "admin":
+            require "Views/admin/dashboard.php";
+            break;
 
-include "Views/layouts/footer.php";
-?>
+        default:
+            echo "<h1>404 NOT FOUND</h1>";
+            break;
+    }
+
+    include "Views/layouts/footer.php";
+    ?>
 
 </body>
+
 </html>
