@@ -25,9 +25,10 @@ $cssFiles = [
 ];
 
 // ================= MODELS =================
-require_once "models/BaseModel.php";
+require_once "models/Database.php";
 require_once "models/ProductModel.php";
 require_once "models/CategoryModel.php";
+require_once "models/UserModel.php";
 
 // ================= CONTROLLERS =================
 require_once "controllers/HomeController.php";
@@ -35,6 +36,7 @@ require_once "controllers/ProductController.php";
 require_once "controllers/CategoryController.php";
 require_once "controllers/CartController.php";
 require_once "controllers/CheckoutController.php";
+require_once "controllers/AuthController.php";
 
 ?>
 <!doctype html>
@@ -105,8 +107,14 @@ switch ($page) {
         require "Views/pages/thank-you.php";
         break;
 
-    case "dang-nhap":
-        require "Views/pages/dang-nhap.php";
+        case "dang-nhap":
+        $auth = new AuthController();
+        
+        if ($action === 'login') {
+            $auth->login();
+        } else {
+            $auth->showLoginForm();
+        }
         break;
 
     case "dang-ky":

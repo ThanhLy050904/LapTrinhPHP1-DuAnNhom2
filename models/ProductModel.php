@@ -1,13 +1,19 @@
 <?php
 
-require_once __DIR__ . '/BaseModel.php';
+require_once __DIR__ . '/Database.php';
 
-class ProductModel extends BaseModel
+class ProductModel
 {
+    private $conn;
+
+    public function __construct()
+    {
+        $db = new Database();
+        $this->conn = $db->connect();
+    }
+
     public function getAll()
     {
-        $conn = $this->connect();
-
         $sql = "
             SELECT products.*,
                    categories.name AS category_name
@@ -16,15 +22,13 @@ class ProductModel extends BaseModel
             ON products.category_id = categories.id
         ";
 
-        $stmt = $conn->query($sql);
+        $stmt = $this->conn->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function find($id)
     {
-        $conn = $this->connect();
-
         $sql = "
             SELECT products.*,
                    categories.name AS category_name,
@@ -35,35 +39,32 @@ class ProductModel extends BaseModel
             WHERE products.id = ?
         ";
 
-        $stmt = $conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
         $stmt->execute([$id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public function getByCategory($slug)
+    public function getByCategory($category)
     {
-        $conn = $this->connect();
-
         $sql = "
             SELECT products.*,
                    categories.name AS category_name
             FROM products
-            JOIN categories
+            LEFT JOIN categories
             ON products.category_id = categories.id
-            WHERE categories.slug = ?
+            WHERE categories.id = ?
+               OR categories.slug = ?
         ";
 
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$slug]);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$category, $category]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function getFeaturedProducts()
     {
-        $conn = $this->connect();
-
         $sql = "
             SELECT products.*,
                    categories.name AS category_name
@@ -71,9 +72,10 @@ class ProductModel extends BaseModel
             LEFT JOIN categories
             ON products.category_id = categories.id
             WHERE products.is_hot = 1
+            LIMIT 6
         ";
 
-        $stmt = $conn->query($sql);
+        $stmt = $this->conn->query($sql);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

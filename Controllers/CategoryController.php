@@ -28,5 +28,5 @@ class CategoryController
 
         require "Views/pages/danh-muc.php";
   
-    }
+    }   
 }
