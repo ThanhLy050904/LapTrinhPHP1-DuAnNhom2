@@ -28,6 +28,7 @@ if ($adminAction === 'view' && $orderId !== null) {
         </div>
     </div>
 
+<<<<<<< HEAD
     <?php if ($adminAction === 'view' && $orderView): ?>
         <div class="order-detail-card">
             <div class="order-detail-header">
@@ -53,6 +54,28 @@ if ($adminAction === 'view' && $orderId !== null) {
                     ?>
                     <span class="order-detail-badge <?= $detailStatus ?>"><?= $detailLabel ?></span>
                     <a class="btn-secondary" href="?pages=admin&section=orders">Quay lại</a>
+=======
+    <?php if ($adminAction === 'edit' && $orderEdit): ?>
+        <div class="admin-form-card">
+            <h3>Chỉnh sửa đơn hàng <?= htmlspecialchars($orderEdit['code'], ENT_QUOTES) ?></h3>
+            <form method="post">
+                <input type="hidden" name="admin_form" value="orders">
+                <input type="hidden" name="code" value="<?= htmlspecialchars($orderEdit['code'], ENT_QUOTES) ?>">
+
+                <div class="form-grid">
+                    <input class="form-control" name="customer" placeholder="Tên khách hàng" value="<?= htmlspecialchars($orderEdit['customer'] ?? '', ENT_QUOTES) ?>" required>
+                    <input class="form-control" name="total" placeholder="Tổng tiền" value="<?= htmlspecialchars($orderEdit['total'] ?? '', ENT_QUOTES) ?>" required>
+                    <select class="form-control span-full" name="status" required>
+                        <option value="Đang chờ" <?= ($orderEdit['status'] ?? '') === 'Đang chờ' ? 'selected' : '' ?>>Đang chờ</option>
+                        <option value="Đang giao" <?= ($orderEdit['status'] ?? '') === 'Đang giao' ? 'selected' : '' ?>>Đang giao</option>
+                        <option value="Hoàn thành" <?= ($orderEdit['status'] ?? '') === 'Hoàn thành' ? 'selected' : '' ?>>Hoàn thành</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary" type="submit">Lưu</button>
+                    <a class="btn-secondary" href="?pages=admin&section=orders">Hủy</a>
+>>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
                 </div>
             </div>
             <?php if (!empty($adminOrderItems)): ?>
@@ -129,6 +152,7 @@ if ($adminAction === 'view' && $orderId !== null) {
                     </td>
                         <td><?= htmlspecialchars($order['total'], ENT_QUOTES) ?></td>
                         <td>
+<<<<<<< HEAD
                             <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                                 <a class="btn-detail" href="?pages=admin&section=orders&action=view&id=<?= urlencode($order['id']) ?>">Xem chi tiết</a>
                                 <a class="btn-danger" href="?pages=admin&section=orders&action=delete&id=<?= urlencode($order['id']) ?>" onclick="return confirm('Xóa đơn hàng này?')">Xóa</a>
@@ -155,6 +179,10 @@ if ($adminAction === 'view' && $orderId !== null) {
                                     </div>
                                 </form>
                             </div>
+=======
+                            <a class="btn-secondary" href="?pages=admin&section=orders&action=edit&code=<?= urlencode($order['code']) ?>">Sửa</a>
+                            <a class="btn-danger" href="?pages=admin&section=orders&action=delete&code=<?= urlencode($order['code']) ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa đơn hàng này?');">Xóa</a>
+>>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
                         </td>
                     </tr>
                 <?php endforeach; ?>

@@ -162,6 +162,7 @@ if (isset($_SESSION['user']['id'])) {
             break;
         case "tai-khoan-cua-toi":
 
+<<<<<<< HEAD
             $controller = new AccountController();
             $controller->profile();
 
@@ -201,6 +202,13 @@ if (isset($_SESSION['user']['id'])) {
 
     include "Views/layouts/footer.php";
     ?>
+=======
+    default:
+        echo "<h1>404 NOT FOUND</h1>";
+        break;
+}
+?>
+>>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
 
 </body>
 

@@ -66,6 +66,7 @@ $filterVisible = !empty($_GET['q']) || !empty($_GET['role']) || !empty($_GET['st
     <?php endif; ?>
 
     <?php if ($adminAction === 'add' || $adminAction === 'edit'): ?>
+<<<<<<< HEAD
         <div class="admin-card admin-form-card">
             <div class="admin-form-header">
                 <div>
@@ -91,6 +92,19 @@ $filterVisible = !empty($_GET['q']) || !empty($_GET['role']) || !empty($_GET['st
                     </div>
                 </div>
                 <div class="admin-form-actions">
+=======
+        <div class="admin-form-card">
+            <h3><?= $adminAction === 'edit' ? 'Chỉnh sửa tài khoản' : 'Thêm tài khoản mới' ?></h3>
+            <form method="post">
+                <input type="hidden" name="admin_form" value="accounts">
+                <input type="hidden" name="id" value="<?= $accountEdit['id'] ?? '' ?>">
+                <div class="form-grid">
+                    <input class="form-control" name="name" placeholder="Tên người dùng" value="<?= htmlspecialchars($accountEdit['name'] ?? '', ENT_QUOTES) ?>" required>
+                    <input class="form-control" name="email" type="email" placeholder="Email" value="<?= htmlspecialchars($accountEdit['email'] ?? '', ENT_QUOTES) ?>" required>
+                    <input class="form-control span-full" name="role" placeholder="Vai trò" value="<?= htmlspecialchars($accountEdit['role'] ?? '', ENT_QUOTES) ?>" required>
+                </div>
+                <div class="form-actions">
+>>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
                     <button class="btn-primary" type="submit">Lưu</button>
                     <a class="btn-secondary" href="?pages=admin&section=accounts">Hủy</a>
                 </div>
@@ -124,8 +138,12 @@ $filterVisible = !empty($_GET['q']) || !empty($_GET['role']) || !empty($_GET['st
                         <td><?= !empty($account['created_at']) ? date('d/m/Y', strtotime($account['created_at'])) : '' ?></td>
                         <td>
                             <a class="btn-secondary" href="?pages=admin&section=accounts&action=edit&id=<?= $account['id'] ?>">Sửa</a>
+<<<<<<< HEAD
                             <a class="btn-secondary" href="?pages=admin&section=accounts&action=lock&id=<?= $account['id'] ?>" onclick="return confirm('Xác nhận <?= ($account['status'] ?? 'active') === 'locked' ? 'mở khóa' : 'khóa' ?> tài khoản này?')"><?= ($account['status'] ?? 'active') === 'locked' ? 'Mở khóa' : 'Khóa' ?></a>
                             <a class="btn-danger" href="?pages=admin&section=accounts&action=delete&id=<?= $account['id'] ?>" onclick="return confirm('Xác nhận xóa tài khoản này?')">Xóa</a>
+=======
+                            <a class="btn-danger" href="?pages=admin&section=accounts&action=delete&id=<?= $account['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này?');">Xóa</a>
+>>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
                         </td>
                     </tr>
                 <?php endforeach; ?>

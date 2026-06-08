@@ -10,131 +10,6 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
     }
 }
 ?>
-<style>
-    .product-form-card{
-    margin-bottom:25px;
-    padding:30px;
-}
-
-.form-title{
-    margin-bottom:25px;
-    font-size:24px;
-}
-
-.product-form{
-    width:100%;
-}
-
-.form-row{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:20px;
-    margin-bottom:20px;
-}
-
-.form-group{
-    display:flex;
-    flex-direction:column;
-}
-
-.form-group label{
-    font-weight:600;
-    margin-bottom:8px;
-    color:#374151;
-}
-
-.form-group input,
-.form-group select,
-.form-group textarea{
-    padding:12px 15px;
-    border:1px solid #d1d5db;
-    border-radius:12px;
-    font-size:14px;
-}
-
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus{
-    outline:none;
-    border-color:#4f46e5;
-}
-
-.editor-toolbar{
-    display:flex;
-    gap:8px;
-    padding:10px;
-    border:1px solid #d1d5db;
-    border-bottom:none;
-    border-radius:12px 12px 0 0;
-    background:#f8fafc;
-}
-
-.editor-toolbar button{
-    border:none;
-    background:white;
-    padding:8px 12px;
-    border-radius:8px;
-    cursor:pointer;
-}
-
-.form-group textarea{
-    resize:none;
-    min-height:220px;
-    border-radius:0 0 12px 12px;
-}
-
-.upload-box{
-    min-height:280px;
-    border:2px dashed #cbd5e1;
-    border-radius:20px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    cursor:pointer;
-    transition:.3s;
-    background:#fafafa;
-}
-
-.upload-box:hover{
-    border-color:#4f46e5;
-    background:#f5f3ff;
-}
-
-.upload-icon{
-    font-size:55px;
-    margin-bottom:10px;
-}
-
-.upload-box h4{
-    margin:0;
-}
-
-.upload-box p{
-    color:#6b7280;
-}
-
-.upload-box img{
-    width:250px;
-    height:250px;
-    object-fit:cover;
-    border-radius:16px;
-}
-
-.form-actions{
-    display:flex;
-    gap:10px;
-    margin-top:25px;
-}
-
-@media(max-width:768px){
-
-    .form-row{
-        grid-template-columns:1fr;
-    }
-
-}
-</style>
 
 <div class="admin-card">
     <div class="page-header">
@@ -154,14 +29,15 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
     </div>
 
     <?php if ($adminAction === 'add' || $adminAction === 'edit'): ?>
-<div class="admin-card product-form-card">
+    <div class="admin-form-card product-form-card">
 
-    <h3 class="form-title">
-        <?= $adminAction === 'edit'
-            ? '✏️ Chỉnh sửa sản phẩm'
-            : '➕ Thêm sản phẩm mới' ?>
-    </h3>
+        <h3 class="form-title">
+            <?= $adminAction === 'edit'
+                ? '✏️ Chỉnh sửa sản phẩm'
+                : '➕ Thêm sản phẩm mới' ?>
+        </h3>
 
+<<<<<<< HEAD
     <form class="product-form" method="post" enctype="multipart/form-data">
         <input type="hidden" name="admin_form" value="products">
         <input type="hidden" name="id" value="<?= htmlspecialchars($productEdit['id'] ?? '', ENT_QUOTES) ?>">
@@ -233,21 +109,52 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
                 <?php endif; ?>
             </label>
         </div>
+=======
+        <form class="product-form" method="post">
+            <input type="hidden" name="admin_form" value="products">
+            <input type="hidden" name="id" value="<?= $productEdit['id'] ?? '' ?>">
 
-        <div class="form-actions">
-            <button type="submit" class="btn-primary">
-                💾 Lưu sản phẩm
-            </button>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tên sản phẩm</label>
+                    <input class="form-control" type="text" name="name" placeholder="Nhập tên sản phẩm" value="<?= htmlspecialchars($productEdit['name'] ?? '', ENT_QUOTES) ?>" required>
+                </div>
 
-            <a href="?pages=admin&section=products"
-                class="btn-secondary">
-                Hủy
-            </a>
-        </div>
+                <div class="form-group">
+                    <label>Giá sản phẩm</label>
+                    <input class="form-control" type="number" name="price" placeholder="Nhập giá sản phẩm" value="<?= htmlspecialchars($productEdit['price'] ?? '', ENT_QUOTES) ?>" required>
+                </div>
+            </div>
+>>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
 
-    </form>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Danh mục</label>
+                    <input class="form-control" type="text" name="category" placeholder="Nhập danh mục" value="<?= htmlspecialchars($productEdit['category'] ?? '', ENT_QUOTES) ?>" required>
+                </div>
 
-</div>
+                <div class="form-group">
+                    <label>Hình ảnh sản phẩm</label>
+                    <input class="form-control" type="text" name="image" placeholder="Link hình ảnh" value="<?= htmlspecialchars($productEdit['image'] ?? '', ENT_QUOTES) ?>" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Mô tả sản phẩm</label>
+                <textarea class="form-control" name="description" rows="5" placeholder="Nhập mô tả chi tiết sản phẩm..."><?= htmlspecialchars($productEdit['description'] ?? '', ENT_QUOTES) ?></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-primary">
+                    💾 Lưu sản phẩm
+                </button>
+
+                <a href="?pages=admin&section=products" class="btn-secondary">
+                    Hủy
+                </a>
+            </div>
+        </form>
+    </div>
 <?php endif; ?>
 
     <table class="table-admin">
@@ -272,7 +179,7 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
                         <td><?= htmlspecialchars($product['category'], ENT_QUOTES) ?></td>
                         <td>
                             <a class="btn-secondary" href="?pages=admin&section=products&action=edit&id=<?= $product['id'] ?>">Sửa</a>
-                            <a class="btn-danger" href="?pages=admin&section=products&action=delete&id=<?= $product['id'] ?>">Xóa</a>
+                            <a class="btn-danger" href="?pages=admin&section=products&action=delete&id=<?= $product['id'] ?>" onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này?');">Xóa</a>
                         </td>
                     </tr>
                 <?php endforeach; ?>
