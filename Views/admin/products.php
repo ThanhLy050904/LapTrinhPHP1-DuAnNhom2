@@ -162,17 +162,19 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
             : '➕ Thêm sản phẩm mới' ?>
     </h3>
 
-    <form class="product-form">
+    <form class="product-form" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="admin_form" value="products">
+        <input type="hidden" name="id" value="<?= htmlspecialchars($productEdit['id'] ?? '', ENT_QUOTES) ?>">
 
         <div class="form-row">
             <div class="form-group">
                 <label>Tên sản phẩm</label>
-                <input type="text" placeholder="Nhập tên sản phẩm">
+                <input type="text" name="name" placeholder="Nhập tên sản phẩm" value="<?= htmlspecialchars($productEdit['name'] ?? '', ENT_QUOTES) ?>" required>
             </div>
 
             <div class="form-group">
                 <label>Giá sản phẩm</label>
-                <input type="number" placeholder="Nhập giá sản phẩm">
+                <input type="number" name="price" placeholder="Nhập giá sản phẩm" value="<?= htmlspecialchars($productEdit['price'] ?? '', ENT_QUOTES) ?>" required>
             </div>
         </div>
 
@@ -181,23 +183,20 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
             <div class="form-group">
                 <label>Danh mục</label>
 
-                <select>
-                    <option>Chọn danh mục</option>
-                    <option>Áo Thun</option>
-                    <option>Quần Jeans</option>
-                    <option>Hoodie</option>
-                    <option>Áo Khoác</option>
-                    <option>Quần Short</option>
+                <select name="category_id" required>
+                    <option value="">Chọn danh mục</option>
+                    <?php foreach ($adminCategories as $cat): ?>
+                        <option value="<?= $cat['id'] ?>" <?= (isset($productEdit['category_id']) && $productEdit['category_id'] == $cat['id']) ? 'selected' : '' ?>><?= htmlspecialchars($cat['name'], ENT_QUOTES) ?></option>
+                    <?php endforeach; ?>
                 </select>
             </div>
 
             <div class="form-group">
                 <label>Tình trạng</label>
-
-                <select>
-                    <option>Còn hàng</option>
-                    <option>Hết hàng</option>
-                </select>
+                <div style="display:flex; gap:12px; align-items:center;">
+                    <label><input type="checkbox" name="is_sale" value="1" <?= (!empty($productEdit['is_sale'])) ? 'checked' : '' ?>> Sale</label>
+                    <label><input type="checkbox" name="is_hot" value="1" <?= (!empty($productEdit['is_hot'])) ? 'checked' : '' ?>> Hot</label>
+                </div>
             </div>
 
         </div>
@@ -213,29 +212,25 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
                 <button type="button">🔗 Link</button>
             </div>
 
-            <textarea rows="8"
-                placeholder="Nhập mô tả chi tiết sản phẩm..."></textarea>
+            <textarea name="description" rows="8" placeholder="Nhập mô tả chi tiết sản phẩm..."><?= htmlspecialchars($productEdit['description'] ?? '', ENT_QUOTES) ?></textarea>
         </div>
 
         <div class="form-group">
             <label>Hình ảnh sản phẩm</label>
-
-            <input type="file"
-                id="productImage"
-                hidden>
+            <input type="file" id="productImage" name="image">
 
             <label for="productImage" class="upload-box">
-
                 <div id="uploadContent">
                     <div class="upload-icon">📷</div>
                     <h4>Tải ảnh sản phẩm</h4>
                     <p>Kéo thả hoặc nhấn để chọn ảnh</p>
                 </div>
 
-                <img id="previewImage"
-                    src=""
-                    alt=""
-                    style="display:none;">
+                <?php if (!empty($productEdit['image'])): ?>
+                    <img id="previewImage" src="<?= htmlspecialchars($productEdit['image'], ENT_QUOTES) ?>" alt="" style="display:block; width:250px; height:250px; object-fit:cover;">
+                <?php else: ?>
+                    <img id="previewImage" src="" alt="" style="display:none;">
+                <?php endif; ?>
             </label>
         </div>
 

@@ -134,7 +134,9 @@ class AuthController
 
                 $user = $userModel->getUserByEmail($email);
 
-                if ($user && password_verify($password, $user['password'])) {
+                if ($user && isset($user['status']) && $user['status'] === 'locked') {
+                    $errors['login'] = "Tài khoản đang bị khóa.";
+                } elseif ($user && password_verify($password, $user['password'])) {
 
                     $_SESSION['user'] = [
                         'id'        => $user['id'],

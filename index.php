@@ -51,6 +51,17 @@ require_once "controllers/CheckoutController.php";
 require_once "controllers/AuthController.php";
 require_once "controllers/AccountController.php";
 
+// Nếu user đã login nhưng tài khoản đã bị khóa, buộc đăng xuất và chuyển sang trang login
+if (isset($_SESSION['user']['id'])) {
+    $userModel = new UserModel();
+    $currentUser = $userModel->getUserById($_SESSION['user']['id']);
+    if ($currentUser && isset($currentUser['status']) && $currentUser['status'] === 'locked') {
+        session_unset();
+        session_destroy();
+        header('Location: ?pages=dang-nhap&locked=1');
+        exit();
+    }
+}
 
 ?>
 <!doctype html>
@@ -177,8 +188,10 @@ require_once "controllers/AccountController.php";
             break;
 
         case "admin":
-            requireAdmin();
-            require "Views/admin/dashboard.php";
+            checkAdmin();
+            require_once "Controllers/AdminController.php";
+            $admin = new AdminController();
+            $admin->index();
             break;
 
         default:

@@ -14,6 +14,10 @@
 
                     <form action="?pages=dang-nhap&action=login" method="POST">
 
+                        <?php if (isset($_GET['locked']) && $_GET['locked'] == '1'): ?>
+                            <div class="alert alert-danger p-2 small">Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.</div>
+                        <?php endif; ?>
+
                         <?php if (isset($errors['login'])): ?>
                             <div class="alert alert-danger p-2 small"><?= $errors['login'] ?></div>
                         <?php endif; ?>
