@@ -13,7 +13,7 @@
 
                 <div class="card-body">
 
-                    <form action="" method="POST">
+                    <form action="" method="POST" enctype="multipart/form-data">
 
                         <div class="mb-3">
                             <label class="form-label">Họ và tên</label>
@@ -34,7 +34,37 @@
                                 <div class="text-danger small mt-1"><?= $errors['email'] ?></div>
                             <?php endif; ?>
                         </div>
+                        <div class="mb-3">
+                            <label class="form-label">Số điện thoại</label>
 
+                            <input
+                                type="text"
+                                name="phone"
+                                class="form-control <?= isset($errors['phone']) ? 'is-invalid' : '' ?>"
+                                placeholder="Nhập số điện thoại"
+                                value="<?= htmlspecialchars($_POST['phone'] ?? '') ?>">
+
+                            <?php if (isset($errors['phone'])): ?>
+                                <div class="text-danger small mt-1">
+                                    <?= $errors['phone'] ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Địa chỉ</label>
+
+                            <textarea
+                                name="address"
+                                class="form-control <?= isset($errors['address']) ? 'is-invalid' : '' ?>"
+                                rows="3"
+                                placeholder="Nhập địa chỉ"><?= htmlspecialchars($_POST['address'] ?? '') ?></textarea>
+
+                            <?php if (isset($errors['address'])): ?>
+                                <div class="text-danger small mt-1">
+                                    <?= $errors['address'] ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label">Mật khẩu</label>
                             <input type="password" name="password"
@@ -53,6 +83,19 @@
                             <?php if (isset($errors['confirm_password'])): ?>
                                 <div class="text-danger small mt-1"><?= $errors['confirm_password'] ?></div>
                             <?php endif; ?>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Ảnh đại diện</label>
+
+                            <input
+                                type="file"
+                                name="avatar"
+                                class="form-control"
+                                accept="image/*">
+
+                            <small class="text-muted">
+                                Không chọn ảnh sẽ dùng ảnh mặc định.
+                            </small>
                         </div>
 
                         <button type="submit" class="btn btn-success w-100">

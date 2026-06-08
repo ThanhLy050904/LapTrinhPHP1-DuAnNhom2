@@ -43,7 +43,11 @@
                         <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
                     </form>
 
+
                     <div class="text-center mt-3">
+                        <a href="?pages=quen-mat-khau">
+                            Quên mật khẩu?
+                        </a>
 
                         Chưa có tài khoản?
                         <a href="?pages=dang-ky">

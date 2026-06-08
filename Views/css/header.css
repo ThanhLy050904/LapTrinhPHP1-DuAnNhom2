@@ -16,7 +16,7 @@ body {
     position: sticky;
     top: 0;
     z-index: 999;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid #eee;
 }
@@ -89,7 +89,7 @@ body {
 .search-input:focus {
     border-color: #000;
     background: #fff;
-    box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
 }
 
 .search-btn {
@@ -134,7 +134,7 @@ body {
     font-weight: 500;
     border: none;
     transition: 0.3s;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 .btn-register:hover {
@@ -163,7 +163,7 @@ body {
     text-decoration: none;
     font-size: 28px;
     position: relative;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
     transition: 0.3s;
 }
 
@@ -190,6 +190,20 @@ body {
     border: 3px solid #fff;
 }
 
+.header-avatar {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    overflow: hidden;
+    display: block;
+
+    border: 2px solid #ddd;
+}
+
 /* ================= MOBILE ================= */
 @media (max-width: 991px) {
     .navbar-nav {
@@ -214,4 +228,5 @@ body {
     .navbar-brand {
         font-size: 24px;
     }
+
 }

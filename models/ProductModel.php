@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . '/Database.php';
-
 class ProductModel
 {
     private $conn;
@@ -76,6 +74,24 @@ class ProductModel
         ";
 
         $stmt = $this->conn->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public function search($keyword)
+    {
+        $keyword = "%$keyword%";
+
+        $sql = "
+        SELECT products.*,
+               categories.name AS category_name
+        FROM products
+        LEFT JOIN categories
+        ON products.category_id = categories.id
+        WHERE products.name LIKE ?
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$keyword]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -33,11 +33,14 @@ $cssFiles = [
     'tin-tuc-detail' => 'tin-tuc.css',
 ];
 
+// ================= helpers =================
+require_once "helpers/AuthHelper.php";
 // ================= MODELS =================
 require_once "models/Database.php";
 require_once "models/ProductModel.php";
 require_once "models/CategoryModel.php";
 require_once "models/UserModel.php";
+
 
 // ================= CONTROLLERS =================
 require_once "controllers/HomeController.php";
@@ -46,6 +49,8 @@ require_once "controllers/CategoryController.php";
 require_once "controllers/CartController.php";
 require_once "controllers/CheckoutController.php";
 require_once "controllers/AuthController.php";
+require_once "controllers/AccountController.php";
+
 
 ?>
 <!doctype html>
@@ -88,9 +93,11 @@ require_once "controllers/AuthController.php";
             $controller->show();
             break;
 
-        case "danh-muc":
-            $controller = new CategoryController();
-            $controller->index();
+        case 'danh-muc':
+
+            $controller = new ProductController();
+            $controller->category();
+
             break;
 
         case "gio-hang":
@@ -134,11 +141,23 @@ require_once "controllers/AuthController.php";
             break;
 
         case "quen-mat-khau":
-            require "Views/pages/quen-mat-khau.php";
+            $auth = new AuthController();
+            $auth->forgotPassword();
             break;
 
+        case "reset-password":
+            $auth = new AuthController();
+            $auth->resetPassword();
+            break;
         case "tai-khoan-cua-toi":
-            require "Views/pages/tai-khoan-cua-toi.php";
+
+            $controller = new AccountController();
+            $controller->profile();
+
+            break;
+        case 'doi-avatar':
+            $controller = new AccountController();
+            $controller->changeAvatar();
             break;
 
         case "lien-he":
@@ -158,7 +177,7 @@ require_once "controllers/AuthController.php";
             break;
 
         case "admin":
-            checkAdmin(); // Bảo vệ trang admin
+            requireAdmin();
             require "Views/admin/dashboard.php";
             break;
 
