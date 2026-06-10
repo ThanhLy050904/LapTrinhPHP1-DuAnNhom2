@@ -2,7 +2,6 @@
 // Prepare admin data used by admin dashboard and subpages.
 // This file is included from Controllers and Views; use robust DB access.
 
-<<<<<<< HEAD
 require_once __DIR__ . '/../../models/Database.php';
 require_once __DIR__ . '/../../models/ProductModel.php';
 require_once __DIR__ . '/../../models/CategoryModel.php';
@@ -29,111 +28,6 @@ try {
         $img = $p['image_main'] ?? $p['image'] ?? '';
         if (!empty($img) && strpos($img, 'Views/') === false) {
             $img = 'Views/image/' . $img;
-=======
-$defaultAdminData = [
-    'products' => [
-        [
-            'id' => 1,
-            'name' => 'Giày thể thao Kenzie',
-            'price' => '1.250.000 đ',
-            'category' => 'Thể thao',
-            'image' => 'https://via.placeholder.com/80x80?text=Giày',
-        ],
-        [
-            'id' => 2,
-            'name' => 'Áo khoác nam',
-            'price' => '850.000 đ',
-            'category' => 'Thời trang',
-            'image' => 'https://via.placeholder.com/80x80?text=Áo',
-        ],
-        [
-            'id' => 3,
-            'name' => 'Balo chống nước',
-            'price' => '420.000 đ',
-            'category' => 'Phụ kiện',
-            'image' => 'https://via.placeholder.com/80x80?text=Balo',
-        ],
-    ],
-    'orders' => [
-        [
-            'code' => 'DH001',
-            'customer' => 'Nguyễn Văn A',
-            'status' => 'Đang chờ',
-            'total' => '2.350.000 đ',
-        ],
-        [
-            'code' => 'DH002',
-            'customer' => 'Trần Thị B',
-            'status' => 'Hoàn thành',
-            'total' => '1.070.000 đ',
-        ],
-        [
-            'code' => 'DH003',
-            'customer' => 'Lê Văn C',
-            'status' => 'Đang giao',
-            'total' => '3.600.000 đ',
-        ],
-        [
-            'code' => 'DH004',
-            'customer' => 'Phạm Thị D',
-            'status' => 'Đang chờ',
-            'total' => '750.000 đ',
-        ],
-        [
-            'code' => 'DH005',
-            'customer' => 'Trần Văn E',
-            'status' => 'Đang giao',
-            'total' => '1.980.000 đ',
-        ],
-        [
-            'code' => 'DH006',
-            'customer' => 'Ngô Thị F',
-            'status' => 'Hoàn thành',
-            'total' => '420.000 đ',
-        ],
-    ],
-    'categories' => [
-        ['id' => 1, 'name' => 'Thời trang'],
-        ['id' => 2, 'name' => 'Thể thao'],
-        ['id' => 3, 'name' => 'Phụ kiện'],
-    ],
-    'accounts' => [
-        ['id' => 1, 'name' => 'Admin Kenzie', 'email' => 'admin@kenzie.vn', 'role' => 'Quản trị viên'],
-        ['id' => 2, 'name' => 'Nguyễn Thị D', 'email' => 'd.n@kenzie.vn', 'role' => 'Khách hàng'],
-        ['id' => 3, 'name' => 'Hoàng M', 'email' => 'm.h@kenzie.vn', 'role' => 'Khách hàng'],
-    ],
-];
-
-if (!isset($_SESSION['adminData'])) {
-    $_SESSION['adminData'] = $defaultAdminData;
-}
-
-$adminData = &$_SESSION['adminData'];
-$adminProducts = &$adminData['products'];
-$adminOrders = &$adminData['orders'];
-$adminCategories = &$adminData['categories'];
-$adminAccounts = &$adminData['accounts'];
-$adminStats = &$adminData['stats'];
-
-// If session already existed but has few orders, append sample orders so tests immediately show data
-$sampleOrders = [
-    ['code' => 'DH004', 'customer' => 'Phạm Thị D', 'status' => 'Đang chờ', 'total' => '750.000 đ'],
-    ['code' => 'DH005', 'customer' => 'Trần Văn E', 'status' => 'Đang giao', 'total' => '1.980.000 đ'],
-    ['code' => 'DH006', 'customer' => 'Ngô Thị F', 'status' => 'Hoàn thành', 'total' => '420.000 đ'],
-];
-foreach ($sampleOrders as $s) {
-    if (admin_get_order_index($adminOrders, $s['code']) === -1) {
-        $adminOrders[] = $s;
-    }
-}
-
-function admin_get_next_id(array $items): int
-{
-    $max = 0;
-    foreach ($items as $item) {
-        if (!empty($item['id']) && intval($item['id']) > $max) {
-            $max = intval($item['id']);
->>>>>>> 5e65d85fd2d5d5ccb45e481e044a54de37b3ec9e
         }
         $adminProducts[] = [
             'id' => $p['id'] ?? null,

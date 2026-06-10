@@ -7,9 +7,7 @@
                 KENZIE
             </a>
 
-            <button class="navbar-toggler"
-                type="button"
-                data-bs-toggle="collapse"
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent">
 
                 <span class="navbar-toggler-icon"></span>
@@ -26,7 +24,12 @@
                             Home
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a class="nav-link <?= ($_GET['pages'] ?? '') == 'danh-muc' ? 'active' : '' ?>"
+                            href="?pages=danh-muc">
+                            Sản phẩm
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link <?= ($_GET['pages'] ?? '') == 'gioi-thieu' ? 'active' : '' ?>"
                             href="?pages=gioi-thieu">
@@ -41,12 +44,7 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link <?= ($_GET['pages'] ?? '') == 'danh-muc' ? 'active' : '' ?>"
-                            href="?pages=danh-muc">
-                            Sản phẩm
-                        </a>
-                    </li>
+
 
                     <li class="nav-item">
                         <a class="nav-link <?= ($_GET['pages'] ?? '') == 'lien-he' ? 'active' : '' ?>"
@@ -66,16 +64,12 @@
 
                         <div class="dropdown">
 
-                            <a href="#"
-                                class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                            <a href="#" class="nav-link dropdown-toggle d-flex align-items-center gap-2"
                                 data-bs-toggle="dropdown">
 
-                                <img
-                                    src="<?= !empty($_SESSION['user']['avatar'])
-                                                ? htmlspecialchars($_SESSION['user']['avatar'])
-                                                : 'Views/image/default-avatar.png' ?>"
-                                    class="header-avatar"
-                                    alt="Avatar">
+                                <img src="<?= !empty($_SESSION['user']['avatar'])
+                                    ? htmlspecialchars($_SESSION['user']['avatar'])
+                                    : 'Views/image/default-avatar.png' ?>" class="header-avatar" alt="Avatar">
 
                                 <span><?= htmlspecialchars($_SESSION['user']['full_name']) ?></span>
 
@@ -84,8 +78,7 @@
                             <ul class="dropdown-menu dropdown-menu-end">
 
                                 <li>
-                                    <a class="dropdown-item"
-                                        href="?pages=tai-khoan-cua-toi">
+                                    <a class="dropdown-item" href="?pages=tai-khoan-cua-toi">
 
                                         <i class="fas fa-user me-2"></i>
                                         Tài khoản của tôi
@@ -103,8 +96,7 @@
                                     </li>
 
                                     <li>
-                                        <a class="dropdown-item text-primary"
-                                            href="?pages=admin">
+                                        <a class="dropdown-item text-primary" href="?pages=admin">
 
                                             <i class="fas fa-cogs me-2"></i>
                                             Trang quản trị
@@ -119,8 +111,7 @@
                                 </li>
 
                                 <li>
-                                    <a class="dropdown-item text-danger"
-                                        href="?pages=dang-nhap&action=logout">
+                                    <a class="dropdown-item text-danger" href="?pages=dang-nhap&action=logout">
 
                                         <i class="fas fa-sign-out-alt me-2"></i>
                                         Đăng xuất
@@ -134,15 +125,13 @@
 
                     <?php else: ?>
 
-                        <a href="?pages=dang-nhap"
-                            class="btn btn-login">
+                        <a href="?pages=dang-nhap" class="btn btn-login">
 
                             Đăng nhập
 
                         </a>
 
-                        <a href="?pages=dang-ky"
-                            class="btn btn-register">
+                        <a href="?pages=dang-ky" class="btn btn-register">
 
                             Đăng ký
 

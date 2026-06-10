@@ -1,30 +1,90 @@
 <?php
 
+require_once "Models/CartModel.php";
+
 class CartController
 {
+    private $cartModel;
+
+    public function __construct()
+    {
+        $this->cartModel = new CartModel();
+    }
+
+    // hiển thị giỏ hàng
     public function index()
     {
-        $cart = [
+        if(!isset($_SESSION['user']))
+        {
+            header("Location:?pages=login");
+            exit;
+        }
 
-            [
-                'name' => 'Nike Air Force 1',
-                'price' => 2500000,
-                'quantity' => 1,
-                'image' => 'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/air-force-1-07-shoes-WrLlWX.png'
-            ],
+        $userId = $_SESSION['user']['id'];
 
-            [
-                'name' => 'Adidas Ultraboost',
-                'price' => 3200000,
-                'quantity' => 2,
-                'image' => 'https://assets.adidas.com/images/w_600,f_auto,q_auto/ultraboost-shoes.jpg'
-            ]
+        $cart = $this->cartModel->getCartItems($userId);
 
-        ];
+        require "Views/pages/gio-hang.php";
+    }
 
+    // thêm vào giỏ
+    public function add()
+    {
+        if(!isset($_SESSION['user']))
+        {
+            header("Location:?pages=login");
+            exit;
+        }
 
+        $userId = $_SESSION['user']['id'];
 
-        require "views/pages/gio-hang.php";
+        $productId = $_POST['product_id'];
+        $size = $_POST['size'];
+        $qty = $_POST['quantity'];
 
+        $cart = $this->cartModel->getCartByUser($userId);
+
+        if(!$cart)
+        {
+            $cartId = $this->cartModel->createCart($userId);
+        }
+        else
+        {
+            $cartId = $cart['id'];
+        }
+
+        $item = $this->cartModel->getCartItem(
+            $cartId,
+            $productId,
+            $size
+        );
+
+        if($item)
+        {
+            $this->cartModel->updateQty(
+                $item['id'],
+                $qty
+            );
+        }
+        else
+        {
+            $this->cartModel->addItem(
+                $cartId,
+                $productId,
+                $size,
+                $qty
+            );
+        }
+
+        header("Location:?pages=gio-hang");
+    }
+
+    public function remove()
+    {
+        $id = $_GET['id'];
+
+        $this->cartModel->deleteItem($id);
+
+        header("Location:?pages=gio-hang");
     }
 }
