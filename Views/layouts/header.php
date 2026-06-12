@@ -68,8 +68,8 @@
                                 data-bs-toggle="dropdown">
 
                                 <img src="<?= !empty($_SESSION['user']['avatar'])
-                                    ? htmlspecialchars($_SESSION['user']['avatar'])
-                                    : 'Views/image/default-avatar.png' ?>" class="header-avatar" alt="Avatar">
+                                                ? htmlspecialchars($_SESSION['user']['avatar'])
+                                                : 'Views/image/default-avatar.png' ?>" class="header-avatar" alt="Avatar">
 
                                 <span><?= htmlspecialchars($_SESSION['user']['full_name']) ?></span>
 
@@ -82,6 +82,15 @@
 
                                         <i class="fas fa-user me-2"></i>
                                         Tài khoản của tôi
+
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" href="?pages=don-hang-cua-toi">
+
+                                        <i class="fas fa-box me-2"></i>
+                                        Đơn hàng của tôi
 
                                     </a>
                                 </li>

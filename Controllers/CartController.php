@@ -1,6 +1,5 @@
 <?php
 
-require_once "Models/CartModel.php";
 
 class CartController
 {
@@ -14,8 +13,7 @@ class CartController
     // hiển thị giỏ hàng
     public function index()
     {
-        if(!isset($_SESSION['user']))
-        {
+        if (!isset($_SESSION['user'])) {
             header("Location:?pages=login");
             exit;
         }
@@ -30,8 +28,7 @@ class CartController
     // thêm vào giỏ
     public function add()
     {
-        if(!isset($_SESSION['user']))
-        {
+        if (!isset($_SESSION['user'])) {
             header("Location:?pages=login");
             exit;
         }
@@ -44,12 +41,9 @@ class CartController
 
         $cart = $this->cartModel->getCartByUser($userId);
 
-        if(!$cart)
-        {
+        if (!$cart) {
             $cartId = $this->cartModel->createCart($userId);
-        }
-        else
-        {
+        } else {
             $cartId = $cart['id'];
         }
 
@@ -59,15 +53,12 @@ class CartController
             $size
         );
 
-        if($item)
-        {
+        if ($item) {
             $this->cartModel->updateQty(
                 $item['id'],
                 $qty
             );
-        }
-        else
-        {
+        } else {
             $this->cartModel->addItem(
                 $cartId,
                 $productId,

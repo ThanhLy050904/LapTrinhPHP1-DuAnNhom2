@@ -34,19 +34,19 @@ class CartModel
     }
 
     // kiểm tra sản phẩm đã tồn tại chưa
-    public function getCartItem($cartId,$productId,$size)
+    public function getCartItem($cartId, $productId, $size)
     {
         $sql = "SELECT * FROM cart_items
                 WHERE cart_id=? AND product_id=? AND size=?";
 
         $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$cartId,$productId,$size]);
+        $stmt->execute([$cartId, $productId, $size]);
 
         return $stmt->fetch();
     }
 
     // thêm sản phẩm
-    public function addItem($cartId,$productId,$size,$qty)
+    public function addItem($cartId, $productId, $size, $qty)
     {
         $sql = "INSERT INTO cart_items
                 (cart_id,product_id,size,quantity,created_at)
@@ -63,7 +63,7 @@ class CartModel
     }
 
     // tăng số lượng
-    public function updateQty($id,$qty)
+    public function updateQty($id, $qty)
     {
         $sql = "UPDATE cart_items
                 SET quantity = quantity + ?
@@ -104,5 +104,18 @@ class CartModel
         $stmt = $this->conn->prepare($sql);
 
         return $stmt->execute([$id]);
+    }
+    public function clearCart($userId)
+    {
+        $sql = "
+        DELETE ci
+        FROM cart_items ci
+        JOIN carts c ON c.id = ci.cart_id
+        WHERE c.user_id = ?
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([$userId]);
     }
 }

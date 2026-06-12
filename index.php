@@ -40,7 +40,8 @@ require_once "models/Database.php";
 require_once "models/ProductModel.php";
 require_once "models/CategoryModel.php";
 require_once "models/UserModel.php";
-
+require_once "Models/CartModel.php";
+require_once "Models/OrderModel.php";
 
 // ================= CONTROLLERS =================
 require_once "controllers/HomeController.php";
@@ -50,6 +51,7 @@ require_once "controllers/CartController.php";
 require_once "controllers/CheckoutController.php";
 require_once "controllers/AuthController.php";
 require_once "controllers/AccountController.php";
+require_once "Controllers/OrderController.php";
 
 // Nếu user đã login nhưng tài khoản đã bị khóa, buộc đăng xuất và chuyển sang trang login
 if (isset($_SESSION['user']['id'])) {
@@ -142,18 +144,36 @@ if (isset($_SESSION['user']['id'])) {
             break;
 
         // ================= THANH TOÁN =================
-        case "thanh-toan":
+        case 'thanh-toan':
 
-            $controller = new CheckoutController();
+            $controller =
+                new OrderController();
 
-            if ($action === "place-order") {
-                $controller->placeOrder(); // ✅ bấm đặt hàng
+            if (
+                isset($_GET['action'])
+                &&
+                $_GET['action'] == 'place-order'
+            ) {
+                $controller->placeOrder();
             } else {
-                $controller->index(); // xem trang thanh toán
+                $controller->checkout();
             }
 
             break;
 
+
+
+        case 'don-hang-cua-toi':
+
+            $controller = new OrderController();
+            $controller->myOrders();
+
+            break;
+        case 'dat-hang-thanh-cong':
+
+            require 'Views/pages/dat-hang-thanh-cong.php';
+
+            break;
         // ================= THANK YOU =================
         case "thank-you":
             $order = $_SESSION['order'] ?? null;

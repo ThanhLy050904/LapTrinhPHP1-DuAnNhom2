@@ -1,164 +1,92 @@
 <?php
 
-require_once __DIR__ . '/BaseModel.php';
-
-class OrderModel extends BaseModel
+class OrderModel
 {
-    public function getAllOrders()
+    private $conn;
+
+    public function __construct()
     {
-        $pdo = $this->connect();
-
-        $sql = "SELECT o.*, u.full_name
-                FROM orders o
-                LEFT JOIN users u ON o.user_id = u.id
-                ORDER BY o.created_at DESC";
-
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $db = new Database();
+        $this->conn = $db->connect();
     }
 
-    public function getOrderById(int $id)
-    {
-        $pdo = $this->connect();
-        $stmt = $pdo->prepare('SELECT o.*, u.full_name FROM orders o LEFT JOIN users u ON o.user_id = u.id WHERE o.id = :id');
-        $stmt->execute(['id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    public function createOrder(
+        $userId,
+        $fullName,
+        $email,
+        $phone,
+        $address,
+        $paymentMethod,
+        $totalPrice
+    ) {
+        $sql = "
+            INSERT INTO orders(
+                user_id,
+                full_name,
+                email,
+                phone,
+                address,
+                payment_method,
+                total_price
+            )
+            VALUES(?,?,?,?,?,?,?)
+        ";
 
-    public function updateOrder(int $id, array $data)
-    {
-        $pdo = $this->connect();
-        $fields = [];
-        $params = ['id' => $id];
+        $stmt = $this->conn->prepare($sql);
 
-        if (isset($data['status'])) {
-            $fields[] = 'status = :status';
-            $params['status'] = $data['status'];
-        }
-        if (isset($data['total_price'])) {
-            $fields[] = 'total_price = :total_price';
-            $params['total_price'] = intval($data['total_price']);
-        }
-        if (isset($data['user_id'])) {
-            $fields[] = 'user_id = :user_id';
-            $params['user_id'] = intval($data['user_id']);
-        }
-
-        if (empty($fields)) {
-            return false;
-        }
-
-        $sql = 'UPDATE orders SET ' . implode(', ', $fields) . ' WHERE id = :id';
-        $stmt = $pdo->prepare($sql);
-        return $stmt->execute($params);
-    }
-
-    public function deleteOrder(int $id)
-    {
-        $pdo = $this->connect();
-        $stmt = $pdo->prepare('DELETE FROM orders WHERE id = :id');
-        return $stmt->execute(['id' => $id]);
-    }
-
-    public function searchOrders(string $q)
-    {
-        $pdo = $this->connect();
-        $like = '%' . $q . '%';
-        $sql = "SELECT o.*, u.full_name
-                FROM orders o
-                LEFT JOIN users u ON o.user_id = u.id
-                WHERE o.id LIKE :like OR u.full_name LIKE :like
-                ORDER BY o.created_at DESC";
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['like' => $like]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function createOrder(?int $userId, int $totalPrice, string $status = 'pending')
-    {
-        $pdo = $this->connect();
-        $sql = 'INSERT INTO orders (user_id, total_price, status, created_at) VALUES (:user_id, :total_price, :status, NOW())';
-        $stmt = $pdo->prepare($sql);
         $stmt->execute([
-            'user_id' => $userId,
-            'total_price' => $totalPrice,
-            'status' => $status,
+            $userId,
+            $fullName,
+            $email,
+            $phone,
+            $address,
+            $paymentMethod,
+            $totalPrice
         ]);
-        return intval($pdo->lastInsertId());
+
+        return $this->conn->lastInsertId();
     }
 
-    public function createOrderItems(int $orderId, array $items)
-    {
-        $pdo = $this->connect();
-        $sql = 'INSERT INTO order_items (order_id, product_id, size, quantity, price, created_at) VALUES (:order_id, :product_id, :size, :quantity, :price, NOW())';
-        $stmt = $pdo->prepare($sql);
-        foreach ($items as $it) {
-            $stmt->execute([
-                'order_id' => $orderId,
-                'product_id' => $it['product_id'] ?? null,
-                'size' => $it['size'] ?? '',
-                'quantity' => intval($it['quantity'] ?? 1),
-                'price' => intval($it['price'] ?? 0),
-            ]);
-        }
-        return true;
+    public function addOrderDetail(
+        $orderId,
+        $productId,
+        $size,
+        $quantity,
+        $price
+    ) {
+        $sql = "
+        INSERT INTO order_items(
+            order_id,
+            product_id,
+            size,
+            quantity,
+            price
+        )
+        VALUES(?,?,?,?,?)
+    ";
+
+        $stmt = $this->conn->prepare($sql);
+
+        return $stmt->execute([
+            $orderId,
+            $productId,
+            $size,
+            $quantity,
+            $price
+        ]);
     }
-
-    public function getOrderItems(int $orderId)
+    public function getOrdersByUser($userId)
     {
-        $pdo = $this->connect();
-        $sql = 'SELECT oi.*, p.name AS product_name, p.image_main
-                FROM order_items oi
-                LEFT JOIN products p ON oi.product_id = p.id
-                WHERE oi.order_id = :order_id';
-        $stmt = $pdo->prepare($sql);
-        $stmt->execute(['order_id' => $orderId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+        $sql = "
+        SELECT *
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY id DESC
+    ";
 
-    /**
-     * Create order and items inside a transaction. Returns order id on success.
-     */
-    public function createFullOrder(?int $userId, int $totalPrice, string $status, array $items)
-    {
-        $pdo = $this->connect();
-        try {
-            $pdo->beginTransaction();
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute([$userId]);
 
-            $sql = 'INSERT INTO orders (user_id, total_price, status, created_at) VALUES (:user_id, :total_price, :status, NOW())';
-            $stmt = $pdo->prepare($sql);
-            $stmt->execute([
-                'user_id' => $userId,
-                'total_price' => $totalPrice,
-                'status' => $status,
-            ]);
-
-            $orderId = intval($pdo->lastInsertId());
-
-            if ($orderId <= 0) {
-                $pdo->rollBack();
-                return 0;
-            }
-
-            $sqlItem = 'INSERT INTO order_items (order_id, product_id, size, quantity, price, created_at) VALUES (:order_id, :product_id, :size, :quantity, :price, NOW())';
-            $stmtItem = $pdo->prepare($sqlItem);
-            foreach ($items as $it) {
-                $stmtItem->execute([
-                    'order_id' => $orderId,
-                    'product_id' => $it['product_id'] ?? null,
-                    'size' => $it['size'] ?? '',
-                    'quantity' => intval($it['quantity'] ?? 1),
-                    'price' => intval($it['price'] ?? 0),
-                ]);
-            }
-
-            $pdo->commit();
-            return $orderId;
-        } catch (Exception $e) {
-            if ($pdo->inTransaction()) $pdo->rollBack();
-            throw $e;
-        }
+        return $stmt->fetchAll();
     }
 }
