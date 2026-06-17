@@ -11,7 +11,13 @@ class CheckoutController
 
     public function index()
     {
+        if (!isset($_SESSION['user'])) {
+            header("Location:?pages=dang-nhap");
+            exit;
+        }
+
         $cart = $this->getCart();
+        $user = $_SESSION['user'];
 
         $total = 0;
         foreach ($cart as $item) {
@@ -42,11 +48,11 @@ class CheckoutController
 
         $_SESSION['order'] = [
             'code' => 'ORDER-' . rand(10000, 99999),
-            'name' => $_POST['name'] ?? '',
+            'name' => $_POST['full_name'] ?? '',
             'phone' => $_POST['phone'] ?? '',
             'email' => $_POST['email'] ?? '',
             'address' => $_POST['address'] ?? '',
-            'payment' => $_POST['payment'] ?? '',
+            'payment' => $_POST['payment_method'] ?? '',
             'items' => $cart,
             'total' => $total
         ];

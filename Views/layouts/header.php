@@ -158,15 +158,7 @@
 
 <!-- Floating Cart -->
 <div class="floating-cart">
-
     <a href="?pages=gio-hang" class="cart-btn">
-
         <i class="fas fa-shopping-bag"></i>
-
-        <span id="floating-cart-count">
-            <?= isset($_SESSION['cart']) ? count($_SESSION['cart']) : 0 ?>
-        </span>
-
     </a>
-
 </div>

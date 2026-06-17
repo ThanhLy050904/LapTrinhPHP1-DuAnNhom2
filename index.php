@@ -124,19 +124,30 @@ switch ($page) {
 
     // ================= CART =================
     case "gio-hang":
-        $controller = new CartController($pdo);
-        $controller->index();
-        break;
-
-    case "cart-add":
-        $controller = new CartController($pdo);
-        $controller->add();
-        break;
-
-    case "cart-remove":
-        $controller = new CartController($pdo);
+    $controller = new CartController($pdo);
+    
+    $action = $_GET['action'] ?? '';
+    
+    if ($action === 'update-quantity') {
+        $controller->updateQuantity();
+    } 
+    elseif ($action === 'remove') {
         $controller->remove();
-        break;
+    } 
+    else {
+        $controller->index();
+    }
+    break;
+
+case "cart-add":
+    $controller = new CartController($pdo);
+    $controller->add();
+    break;
+
+case "cart-remove":
+    $controller = new CartController($pdo);
+    $controller->remove();
+    break;
 
     // ================= CHECKOUT =================
     case 'thanh-toan':
@@ -221,12 +232,134 @@ switch ($page) {
         break;
 
     // ================= ADMIN =================
-    case "admin":
-        checkAdmin();
-        require_once "Controllers/AdminController.php";
-        $admin = new AdminController();
-        $admin->index();
-        break;
+   case "admin":
+    checkAdmin();
+
+    $section = $_GET['section'] ?? 'dashboard';
+    $action  = $_GET['action'] ?? null;
+    $id      = $_GET['id'] ?? null;
+
+    ?>
+
+    <div class="admin-wrapper">
+
+        <!-- ================= SIDEBAR ================= -->
+        <aside class="sidebar">
+            <?php include "Views/admin/sidebar.php"; ?>
+        </aside>
+
+        <!-- ================= MAIN ================= -->
+        <main class="main-content">
+
+            <?php
+
+            // ================= PRODUCT ADMIN =================
+            if ($section === 'products') {
+
+                require_once "controllers/AdminProductController.php";
+                $controller = new AdminProductController($pdo);
+
+                if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->store();
+                }
+
+                elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->update($id);
+                }
+
+                elseif ($action === 'delete') {
+                    $controller->delete($id);
+                }
+
+                else {
+                    $controller->index();
+                }
+            }
+
+            // ================= CATEGORY ADMIN =================
+            elseif ($section === 'categories') {
+
+                require_once "controllers/AdminCategoryController.php";
+                $controller = new AdminCategoryController($pdo);
+
+                if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->store();
+                }
+
+                elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    $controller->update($id);
+                }
+
+                elseif ($action === 'delete') {
+                    $controller->delete($id);
+                }
+
+                else {
+                    $controller->index();
+                }
+            }
+            //================== ORDER ADMIN =================
+            elseif ($section === 'orders') {
+
+    require_once "controllers/AdminOrderController.php";
+    $order = new AdminOrderController($pdo);
+
+    if ($action === 'view') {
+        $order->show($id);
+    }
+
+    elseif ($action === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $order->updateStatus($id);
+    }
+
+    elseif ($action === 'delete') {
+        $order->delete($id);
+    }
+
+    else {
+        $order->index();
+    }
+}
+
+
+
+elseif ($section === 'accounts') {
+
+    require_once "controllers/AdminAccountController.php";
+    $controller = new AdminAccountController($pdo);
+
+    if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller->store();
+    }
+    elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller->update($id);
+    }
+    elseif ($action === 'delete') {
+        $controller->delete($id);
+    }
+    elseif ($action === 'lock') {
+        $controller->lock($id);
+    }
+    else {
+        $controller->index();
+    }
+}
+
+            // ================= DASHBOARD =================
+            else {
+                echo "<h2>📊 Dashboard Admin</h2>";
+                echo "<p>Chào mừng bạn đến trang quản trị</p>";
+            }
+
+            ?>
+
+        </main>
+
+    </div>
+
+    <?php
+    break;
+    
 
     default:
         echo "<h1>404 NOT FOUND</h1>";

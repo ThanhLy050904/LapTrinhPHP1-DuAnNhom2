@@ -112,20 +112,23 @@ $total = 0;
                                 </td>
 
                                 <!-- QUANTITY + - -->
-                                <td>
-
-                                    <div class="qty-box">
-
-                                        <button type="button" class="qty-btn minus">-</button>
-
-                                        <input type="number" value="<?= $item['quantity'] ?>" min="1" class="qty-input"
-                                            data-price="<?= $item['price'] ?>">
-
-                                        <button type="button" class="qty-btn plus">+</button>
-
-                                    </div>
-
-                                </td>
+                            <!-- SỐ LƯỢNG -->
+<!-- SỐ LƯỢNG -->
+<td>
+    <div class="qty-box">
+        <button type="button" class="qty-btn minus" data-id="<?= $item['id'] ?>">-</button>
+        
+        <input 
+            type="number" 
+            value="<?= $item['quantity'] ?>" 
+            min="1" 
+            class="qty-input"
+            data-id="<?= $item['id'] ?>"
+            data-price="<?= $item['price'] ?>">
+        
+        <button type="button" class="qty-btn plus" data-id="<?= $item['id'] ?>">+</button>
+    </div>
+</td>
 
                                 <!-- TOTAL -->
                                 <td>
@@ -136,9 +139,11 @@ $total = 0;
 
                                 <!-- REMOVE -->
                                 <td>
-                                    <a href="?pages=cart-remove&id=<?= $item['id'] ?>" class="btn btn-danger btn-sm">
-                                        Xóa
-                                    </a>
+                                    <a href="?pages=gio-hang&action=remove&id=<?= $item['id'] ?>" 
+   class="btn btn-danger btn-sm"
+   onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?')">
+    Xóa
+</a>
                                 </td>
 
                             </tr>
@@ -209,56 +214,90 @@ $total = 0;
 </main>
 
 <script>
-
     function formatVND(num) {
         return num.toLocaleString('vi-VN') + ' ₫';
     }
 
+    function updateItemTotal(input) {
+        const price = parseInt(input.dataset.price);
+        const qty = parseInt(input.value) || 1;
+        const subTotal = price * qty;
+        
+        // Cập nhật tổng của item đó
+        const itemTotalEl = input.closest('tr').querySelector('.item-total');
+        if (itemTotalEl) itemTotalEl.innerText = formatVND(subTotal);
+    }
+
     function updateCartTotal() {
-
         let total = 0;
-
         document.querySelectorAll(".cart-row").forEach(row => {
-
-            let input = row.querySelector(".qty-input");
-            let itemTotal = row.querySelector(".item-total");
-
-            let price = parseInt(input.dataset.price);
-            let qty = parseInt(input.value) || 1;
-
-            let sub = price * qty;
-
-            itemTotal.innerText = formatVND(sub);
-
-            total += sub;
+            const input = row.querySelector(".qty-input");
+            const price = parseInt(input.dataset.price);
+            const qty = parseInt(input.value) || 1;
+            total += price * qty;
         });
 
         document.getElementById("cart-total").innerText = formatVND(total);
         document.getElementById("cart-total-final").innerText = formatVND(total);
     }
 
-    // + button
+    // Hàm cập nhật số lượng lên server qua AJAX
+    function updateQuantityToServer(itemId, newQty) {
+        fetch('?pages=gio-hang&action=update-quantity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `item_id=${itemId}&quantity=${newQty}`
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Lỗi server');
+            return response.text();
+        })
+        .catch(error => {
+            console.error('Lỗi cập nhật:', error);
+            alert('Có lỗi khi cập nhật số lượng. Vui lòng thử lại!');
+        });
+    }
+
+    // Xử lý nút +
     document.querySelectorAll(".plus").forEach(btn => {
         btn.addEventListener("click", function () {
-            let input = this.parentElement.querySelector(".qty-input");
-            input.value = parseInt(input.value) + 1;
+            const input = this.parentElement.querySelector(".qty-input");
+            let qty = parseInt(input.value) || 1;
+            input.value = ++qty;
+
+            updateItemTotal(input);
             updateCartTotal();
+            updateQuantityToServer(input.dataset.id, qty);
         });
     });
 
-    // - button
+    // Xử lý nút -
     document.querySelectorAll(".minus").forEach(btn => {
         btn.addEventListener("click", function () {
-            let input = this.parentElement.querySelector(".qty-input");
-            let val = parseInt(input.value);
-            if (val > 1) input.value = val - 1;
-            updateCartTotal();
+            const input = this.parentElement.querySelector(".qty-input");
+            let qty = parseInt(input.value) || 1;
+            if (qty > 1) {
+                input.value = --qty;
+                updateItemTotal(input);
+                updateCartTotal();
+                updateQuantityToServer(input.dataset.id, qty);
+            }
         });
     });
 
-    // manual input change
+    // Cập nhật khi người dùng gõ trực tiếp vào input
     document.querySelectorAll(".qty-input").forEach(input => {
-        input.addEventListener("input", updateCartTotal);
+        input.addEventListener("change", function () {
+            let qty = parseInt(this.value) || 1;
+            if (qty < 1) {
+                qty = 1;
+                this.value = 1;
+            }
+            updateItemTotal(this);
+            updateCartTotal();
+            updateQuantityToServer(this.dataset.id, qty);
+        });
     });
-
 </script>
