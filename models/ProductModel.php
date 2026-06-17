@@ -4,10 +4,9 @@ class ProductModel
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $db = new Database();
-        $this->conn = $db->connect();
+        $this->conn = $pdo;
     }
 
     public function getAll()
@@ -20,9 +19,7 @@ class ProductModel
             ON products.category_id = categories.id
         ";
 
-        $stmt = $this->conn->query($sql);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public function find($id)
@@ -61,7 +58,7 @@ class ProductModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function getFeaturedProducts()
+    public function search($keyword)
     {
         $sql = "
             SELECT products.*,
@@ -69,30 +66,54 @@ class ProductModel
             FROM products
             LEFT JOIN categories
             ON products.category_id = categories.id
-            WHERE products.is_hot = 1
-            LIMIT 6
+            WHERE products.name LIKE ?
         ";
 
-        $stmt = $this->conn->query($sql);
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute(["%$keyword%"]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function search($keyword)
-    {
-        $keyword = "%$keyword%";
 
+    // ===== PHÂN TRANG =====
+    public function getAllPaginated($limit, $offset)
+    {
         $sql = "
+            SELECT products.*,
+                   categories.name AS category_name
+            FROM products
+            LEFT JOIN categories
+            ON products.category_id = categories.id
+            LIMIT ? OFFSET ?
+        ";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(2, (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countAll()
+    {
+        return $this->conn->query("SELECT COUNT(*) FROM products")->fetchColumn();
+    }
+    //=======SP nổi bật=======
+    public function getFeaturedProducts()
+{
+    $sql = "
         SELECT products.*,
                categories.name AS category_name
         FROM products
         LEFT JOIN categories
         ON products.category_id = categories.id
-        WHERE products.name LIKE ?
+        WHERE products.is_hot = 1
+        ORDER BY products.id DESC
+        LIMIT 8
     ";
 
-        $stmt = $this->conn->prepare($sql);
-        $stmt->execute([$keyword]);
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $stmt = $this->conn->query($sql);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

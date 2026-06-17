@@ -2,9 +2,16 @@
 
 class AuthController
 {
+    private $userModel;
+
+    public function __construct($pdo)
+    {
+        $this->userModel = new UserModel($pdo);
+    }
+
     public function register()
     {
-        $userModel = new UserModel();
+        $userModel = $this->userModel;
         $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,14 +53,9 @@ class AuthController
                 $errors['address'] = "Vui lòng nhập địa chỉ.";
             }
 
-            // Avatar mặc định
             $avatar = 'uploads/avatar/default.png';
 
-            // Upload avatar nếu người dùng chọn ảnh
-            if (
-                isset($_FILES['avatar']) &&
-                $_FILES['avatar']['error'] === 0
-            ) {
+            if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] === 0) {
 
                 $uploadDir = 'uploads/avatar/';
 
@@ -61,27 +63,15 @@ class AuthController
                     mkdir($uploadDir, 0777, true);
                 }
 
-                $extension = strtolower(
-                    pathinfo(
-                        $_FILES['avatar']['name'],
-                        PATHINFO_EXTENSION
-                    )
-                );
-
+                $extension = strtolower(pathinfo($_FILES['avatar']['name'], PATHINFO_EXTENSION));
                 $allowed = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
                 if (in_array($extension, $allowed)) {
 
                     $fileName = time() . '_' . uniqid() . '.' . $extension;
-
                     $targetFile = $uploadDir . $fileName;
 
-                    if (
-                        move_uploaded_file(
-                            $_FILES['avatar']['tmp_name'],
-                            $targetFile
-                        )
-                    ) {
+                    if (move_uploaded_file($_FILES['avatar']['tmp_name'], $targetFile)) {
                         $avatar = $targetFile;
                     }
                 }
@@ -99,11 +89,9 @@ class AuthController
                 );
 
                 if ($result) {
-
                     header("Location: ?pages=dang-nhap");
                     exit();
                 } else {
-
                     $errors['register'] = "Đăng ký thất bại.";
                 }
             }
@@ -114,7 +102,7 @@ class AuthController
 
     public function login()
     {
-        $userModel = new UserModel();
+        $userModel = $this->userModel;
         $errors = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -139,17 +127,16 @@ class AuthController
                 } elseif ($user && password_verify($password, $user['password'])) {
 
                     $_SESSION['user'] = [
-                        'id'        => $user['id'],
+                        'id' => $user['id'],
                         'full_name' => $user['full_name'],
-                        'email'     => $user['email'],
-                        'role'      => $user['role'],
-                        'avatar'    => $user['avatar']
+                        'email' => $user['email'],
+                        'role' => $user['role'],
+                        'avatar' => $user['avatar']
                     ];
 
                     header("Location: ?pages=home");
                     exit();
                 } else {
-
                     $errors['login'] = "Email hoặc mật khẩu không chính xác.";
                 }
             }
@@ -157,76 +144,17 @@ class AuthController
 
         require "Views/pages/dang-nhap.php";
     }
+
     public function forgotPassword()
     {
-        $userModel = new UserModel();
-        $errors = [];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $email = trim($_POST['email'] ?? '');
-
-            if (empty($email)) {
-                $errors['email'] = "Vui lòng nhập email.";
-            } else {
-
-                $user = $userModel->getUserByEmailOnly($email);
-
-                if (!$user) {
-                    $errors['email'] = "Email không tồn tại trong hệ thống.";
-                } else {
-
-                    // lưu session để qua bước đổi mật khẩu
-                    $_SESSION['reset_user_id'] = $user['id'];
-
-                    header("Location: ?pages=reset-password");
-                    exit();
-                }
-            }
-        }
-
-        require "Views/pages/quen-mat-khau.php";
+        $userModel = $this->userModel;
+      
     }
+
     public function resetPassword()
     {
-        $userModel = new UserModel();
-        $errors = [];
-
-        if (!isset($_SESSION['reset_user_id'])) {
-            header("Location: ?pages=quen-mat-khau");
-            exit();
-        }
-
-        $userId = $_SESSION['reset_user_id'];
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-            $password = $_POST['password'] ?? '';
-            $confirm  = $_POST['confirm_password'] ?? '';
-
-            if (strlen($password) < 6) {
-                $errors['password'] = "Mật khẩu ít nhất 6 ký tự.";
-            }
-
-            if ($password !== $confirm) {
-                $errors['confirm_password'] = "Mật khẩu không khớp.";
-            }
-
-            if (empty($errors)) {
-
-                $userModel->updatePasswordById($userId, $password);
-
-                unset($_SESSION['reset_user_id']);
-
-                echo "<script>
-                alert('Đổi mật khẩu thành công!');
-                window.location='?pages=dang-nhap';
-            </script>";
-                exit();
-            }
-        }
-
-        require "Views/pages/reset-password.php";
+        $userModel = $this->userModel;
+   
     }
 
     public function showLoginForm()

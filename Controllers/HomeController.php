@@ -5,11 +5,11 @@ class HomeController
     protected $productModel;
     protected $categoryModel;
 
-    public function __construct()
-    {
-        $this->productModel = new ProductModel();
-        $this->categoryModel = new CategoryModel();
-    }
+    public function __construct($pdo)
+{
+    $this->productModel = new ProductModel($pdo);
+    $this->categoryModel = new CategoryModel($pdo);
+}
 
     public function index()
     {

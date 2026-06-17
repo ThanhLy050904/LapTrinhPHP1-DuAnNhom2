@@ -2,6 +2,13 @@
 
 class AccountController
 {
+    private $userModel;
+
+    public function __construct($pdo)
+    {
+        $this->userModel = new UserModel($pdo);
+    }
+
     public function profile()
     {
         if (!isset($_SESSION['user'])) {
@@ -10,7 +17,7 @@ class AccountController
             exit();
         }
 
-        $userModel = new UserModel();
+        $userModel = $this->userModel;
 
         // Đổi avatar
         if (
@@ -69,12 +76,15 @@ class AccountController
 
         require "Views/pages/tai-khoan-cua-toi.php";
     }
+
     public function changeAvatar()
     {
         if (!isset($_SESSION['user'])) {
             header("Location: ?pages=dang-nhap");
             exit();
         }
+
+        $userModel = $this->userModel;
 
         if (
             isset($_FILES['avatar']) &&
@@ -111,8 +121,6 @@ class AccountController
                     )
                 ) {
 
-                    $userModel = new UserModel();
-
                     $userModel->updateAvatar(
                         $_SESSION['user']['id'],
                         $avatarPath
@@ -124,7 +132,7 @@ class AccountController
             }
         }
 
-        header("Location: ?pages=tai-khoan");
+        header("Location: ?pages=tai-khoan-cua-toi");
         exit();
     }
 }

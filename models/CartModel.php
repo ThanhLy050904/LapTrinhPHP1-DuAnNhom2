@@ -1,14 +1,12 @@
 <?php
 
-
 class CartModel
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $db = new Database();
-        $this->conn = $db->connect();
+        $this->conn = $pdo;
     }
 
     // lấy cart của user
@@ -62,19 +60,16 @@ class CartModel
         ]);
     }
 
-    // tăng số lượng
-    public function updateQty($id, $qty)
+    // ✅ FIX: set số lượng (quan trọng)
+    public function setQty($id, $qty)
     {
         $sql = "UPDATE cart_items
-                SET quantity = quantity + ?
-                WHERE id=?";
+                SET quantity = ?
+                WHERE id = ?";
 
         $stmt = $this->conn->prepare($sql);
 
-        return $stmt->execute([
-            $qty,
-            $id
-        ]);
+        return $stmt->execute([$qty, $id]);
     }
 
     // danh sách giỏ hàng
@@ -105,14 +100,15 @@ class CartModel
 
         return $stmt->execute([$id]);
     }
+
     public function clearCart($userId)
     {
         $sql = "
-        DELETE ci
-        FROM cart_items ci
-        JOIN carts c ON c.id = ci.cart_id
-        WHERE c.user_id = ?
-    ";
+            DELETE ci
+            FROM cart_items ci
+            JOIN carts c ON c.id = ci.cart_id
+            WHERE c.user_id = ?
+        ";
 
         $stmt = $this->conn->prepare($sql);
 

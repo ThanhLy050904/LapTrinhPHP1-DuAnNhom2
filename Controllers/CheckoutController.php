@@ -2,6 +2,13 @@
 
 class CheckoutController
 {
+    private $cartModel;
+
+    public function __construct($pdo)
+    {
+        $this->cartModel = new CartModel($pdo);
+    }
+
     public function index()
     {
         $cart = $this->getCart();
@@ -16,9 +23,17 @@ class CheckoutController
 
     public function placeOrder()
     {
-        session_start();
+        if (!isset($_SESSION['user'])) {
+            header("Location:?pages=dang-nhap");
+            exit;
+        }
 
         $cart = $this->getCart();
+
+        if (empty($cart)) {
+            header("Location:?pages=gio-hang");
+            exit;
+        }
 
         $total = 0;
         foreach ($cart as $item) {
@@ -36,7 +51,7 @@ class CheckoutController
             'total' => $total
         ];
 
-        $_SESSION['cart'] = [];
+        $this->cartModel->clearCart($_SESSION['user']['id']);
 
         header("Location: ?pages=thank-you");
         exit;
@@ -44,19 +59,10 @@ class CheckoutController
 
     private function getCart()
     {
-        return [
-            [
-                'name' => 'Nike Air Force 1',
-                'price' => 2500000,
-                'quantity' => 1,
-                'image' => 'https://static.nike.com/a/images/t_PDP_1728_v1/f_auto,q_auto:eco/air-force-1-07-shoes-WrLlWX.png'
-            ],
-            [
-                'name' => 'Adidas Ultraboost',
-                'price' => 3200000,
-                'quantity' => 2,
-                'image' => 'https://assets.adidas.com/images/w_600,f_auto,q_auto/ultraboost-shoes.jpg'
-            ]
-        ];
+        if (!isset($_SESSION['user'])) {
+            return [];
+        }
+
+        return $this->cartModel->getCartItems($_SESSION['user']['id']);
     }
 }

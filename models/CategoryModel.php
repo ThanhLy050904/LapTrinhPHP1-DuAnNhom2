@@ -4,11 +4,10 @@ class CategoryModel
 {
     private $conn;
 
-    public function __construct()
-    {
-        $db = new Database();
-        $this->conn = $db->connect();
-    }
+    public function __construct($pdo)
+{
+    $this->conn = $pdo;
+}
 
     public function getAll()
     {

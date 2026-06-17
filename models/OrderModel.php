@@ -4,10 +4,9 @@ class OrderModel
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $db = new Database();
-        $this->conn = $db->connect();
+        $this->conn = $pdo;
     }
 
     public function createOrder(

@@ -6,15 +6,18 @@ error_reporting(E_ALL);
 ob_start();
 
 session_start();
+
 function checkAdmin()
 {
     if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 'admin') {
         die("<h1>403 - Truy cập bị từ chối! Bạn không có quyền truy cập trang này.</h1>");
     }
 }
+
 $page = $_GET['pages'] ?? 'home';
 $action = $_GET['action'] ?? null;
 
+// ================= CSS =================
 $cssFiles = [
     'home' => 'home.css',
     'home1' => 'home.css',
@@ -33,8 +36,9 @@ $cssFiles = [
     'tin-tuc-detail' => 'tin-tuc.css',
 ];
 
-// ================= helpers =================
+// ================= HELPERS =================
 require_once "helpers/AuthHelper.php";
+
 // ================= MODELS =================
 require_once "models/Database.php";
 require_once "models/ProductModel.php";
@@ -42,6 +46,10 @@ require_once "models/CategoryModel.php";
 require_once "models/UserModel.php";
 require_once "Models/CartModel.php";
 require_once "Models/OrderModel.php";
+
+// ================= PDO =================
+$db = new Database();
+$pdo = $db->connect();
 
 // ================= CONTROLLERS =================
 require_once "controllers/HomeController.php";
@@ -53,10 +61,13 @@ require_once "controllers/AuthController.php";
 require_once "controllers/AccountController.php";
 require_once "Controllers/OrderController.php";
 
-// Nếu user đã login nhưng tài khoản đã bị khóa, buộc đăng xuất và chuyển sang trang login
+// ================= CHECK USER LOCK =================
 if (isset($_SESSION['user']['id'])) {
-    $userModel = new UserModel();
+
+    $userModel = new UserModel($pdo);
+
     $currentUser = $userModel->getUserById($_SESSION['user']['id']);
+
     if ($currentUser && isset($currentUser['status']) && $currentUser['status'] === 'locked') {
         session_unset();
         session_destroy();
@@ -76,8 +87,7 @@ if (isset($_SESSION['user']['id'])) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="Views/css/header.css">
 
@@ -89,164 +99,142 @@ if (isset($_SESSION['user']['id'])) {
 
 <body>
 
-    <?php if ($page !== 'admin'): ?>
-        <?php include "Views/layouts/header.php"; ?>
-    <?php endif; ?>
+<?php if ($page !== 'admin'): ?>
+    <?php include "Views/layouts/header.php"; ?>
+<?php endif; ?>
 
-    <?php
-    switch ($page) {
+<?php
 
-        case "home":
-            $controller = new HomeController();
-            $controller->index();
-            break;
+switch ($page) {
 
-        case "chi-tiet-san-pham":
-            $controller = new ProductController();
-            $controller->show();
-            break;
+    case "home":
+        $controller = new HomeController($pdo);
+        $controller->index();
+        break;
 
-        case 'danh-muc':
+    case "chi-tiet-san-pham":
+        $controller = new ProductController($pdo);
+        $controller->show();
+        break;
 
-            $controller = new ProductController();
-            $controller->category();
+    case 'danh-muc':
+        $controller = new ProductController($pdo);
+        $controller->category();
+        break;
 
-            break;
+    // ================= CART =================
+    case "gio-hang":
+        $controller = new CartController($pdo);
+        $controller->index();
+        break;
 
-        case "gio-hang":
+    case "cart-add":
+        $controller = new CartController($pdo);
+        $controller->add();
+        break;
 
-            require_once "Controllers/CartController.php";
+    case "cart-remove":
+        $controller = new CartController($pdo);
+        $controller->remove();
+        break;
 
-            $controller = new CartController();
+    // ================= CHECKOUT =================
+    case 'thanh-toan':
 
-            $controller->index();
+        $controller = new OrderController($pdo);
 
-            break;
+        if (isset($_GET['action']) && $_GET['action'] == 'place-order') {
+            $controller->placeOrder();
+        } else {
+            $controller->checkout();
+        }
 
-        case "cart-add":
+        break;
 
-            require_once "Controllers/CartController.php";
+    // ================= ORDERS =================
+    case 'don-hang-cua-toi':
+        $controller = new OrderController($pdo);
+        $controller->myOrders();
+        break;
 
-            $controller = new CartController();
+    case 'dat-hang-thanh-cong':
+        require 'Views/pages/dat-hang-thanh-cong.php';
+        break;
 
-            $controller->add();
+    case "thank-you":
+        $order = $_SESSION['order'] ?? null;
+        require "Views/pages/thank-you.php";
+        break;
 
-            break;
+    // ================= AUTH =================
+    case "dang-nhap":
+        $auth = new AuthController($pdo);
+        if ($action === 'login') {
+            $auth->login();
+        } elseif ($action === 'logout') {
+            $auth->logout();
+        } else {
+            $auth->showLoginForm();
+        }
+        break;
 
-        case "cart-remove":
+    case "dang-ky":
+        $controller = new AuthController($pdo);
+        $controller->register();
+        break;
 
-            require_once "Controllers/CartController.php";
+    case "quen-mat-khau":
+        $auth = new AuthController($pdo);
+        $auth->forgotPassword();
+        break;
 
-            $controller = new CartController();
+    case "reset-password":
+        $auth = new AuthController($pdo);
+        $auth->resetPassword();
+        break;
 
-            $controller->remove();
+    case "tai-khoan-cua-toi":
+        $controller = new AccountController($pdo);
+        $controller->profile();
+        break;
 
-            break;
+    case 'doi-avatar':
+        $controller = new AccountController($pdo);
+        $controller->changeAvatar();
+        break;
 
-        // ================= THANH TOÁN =================
-        case 'thanh-toan':
+    // ================= STATIC PAGES =================
+    case "lien-he":
+        require "Views/pages/lien-he.php";
+        break;
 
-            $controller =
-                new OrderController();
+    case "tin-tuc":
+        require "Views/pages/tin-tuc.php";
+        break;
 
-            if (
-                isset($_GET['action'])
-                &&
-                $_GET['action'] == 'place-order'
-            ) {
-                $controller->placeOrder();
-            } else {
-                $controller->checkout();
-            }
+    case "tin-tuc-detail":
+        require "Views/pages/tin-tuc-detail.php";
+        break;
 
-            break;
+    case "gioi-thieu":
+        require "Views/pages/gioi-thieu.php";
+        break;
 
+    // ================= ADMIN =================
+    case "admin":
+        checkAdmin();
+        require_once "Controllers/AdminController.php";
+        $admin = new AdminController();
+        $admin->index();
+        break;
 
+    default:
+        echo "<h1>404 NOT FOUND</h1>";
+        break;
+}
 
-        case 'don-hang-cua-toi':
-
-            $controller = new OrderController();
-            $controller->myOrders();
-
-            break;
-        case 'dat-hang-thanh-cong':
-
-            require 'Views/pages/dat-hang-thanh-cong.php';
-
-            break;
-        // ================= THANK YOU =================
-        case "thank-you":
-            $order = $_SESSION['order'] ?? null;
-            require "Views/pages/thank-you.php";
-            break;
-
-        case "dang-nhap":
-            $auth = new AuthController();
-            if ($action === 'login') {
-                $auth->login();
-            } elseif ($action === 'logout') {
-                $auth->logout();
-            } else {
-                $auth->showLoginForm();
-            }
-            break;
-
-        case "dang-ky":
-            $controller = new AuthController();
-            $controller->register();
-            break;
-
-        case "quen-mat-khau":
-            $auth = new AuthController();
-            $auth->forgotPassword();
-            break;
-
-        case "reset-password":
-            $auth = new AuthController();
-            $auth->resetPassword();
-            break;
-        case "tai-khoan-cua-toi":
-
-            $controller = new AccountController();
-            $controller->profile();
-
-            break;
-        case 'doi-avatar':
-            $controller = new AccountController();
-            $controller->changeAvatar();
-            break;
-
-        case "lien-he":
-            require "Views/pages/lien-he.php";
-            break;
-
-        case "tin-tuc":
-            require "Views/pages/tin-tuc.php";
-            break;
-
-        case "tin-tuc-detail":
-            require "Views/pages/tin-tuc-detail.php";
-            break;
-
-        case "gioi-thieu":
-            require "Views/pages/gioi-thieu.php";
-            break;
-
-        case "admin":
-            checkAdmin();
-            require_once "Controllers/AdminController.php";
-            $admin = new AdminController();
-            $admin->index();
-            break;
-
-        default:
-            echo "<h1>404 NOT FOUND</h1>";
-            break;
-    }
-
-    include "Views/layouts/footer.php";
-    ?>
+include "Views/layouts/footer.php";
+?>
 
 </body>
-
 </html>

@@ -3,44 +3,53 @@
 class ProductController
 {
     protected $productModel;
+    protected $categoryModel;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $this->productModel = new ProductModel();
+        $this->productModel = new ProductModel($pdo);
+        $this->categoryModel = new CategoryModel($pdo);
     }
 
-    // DANH MỤC + TÌM KIẾM
     public function category()
     {
-        $categoryModel = new CategoryModel();
-
-        $categories = $categoryModel->getAll();
+        $categories = $this->categoryModel->getAll();
 
         $current_category = $_GET['category'] ?? 'all';
 
-        // TÌM KIẾM
+        // ===== PHÂN TRANG =====
+        $limit = 8;
+        $page = isset($_GET['page_number']) ? (int)$_GET['page_number'] : 1;
+        if ($page < 1) $page = 1;
+
+        $offset = ($page - 1) * $limit;
+
+        // ===== SEARCH =====
         if (!empty($_GET['keyword'])) {
 
             $keyword = trim($_GET['keyword']);
 
-            $products = $this->productModel->search($keyword);
+            $allProducts = $this->productModel->search($keyword);
+
         } else {
 
             if ($current_category == 'all') {
-
-                $products = $this->productModel->getAll();
+                $allProducts = $this->productModel->getAll();
             } else {
-
-                $products = $this->productModel->getByCategory(
-                    $current_category
-                );
+                $allProducts = $this->productModel->getByCategory($current_category);
             }
         }
+
+        // ===== TỔNG SỐ =====
+        $totalProducts = count($allProducts);
+        $totalPages = ceil($totalProducts / $limit);
+
+        // ===== CẮT DATA THEO PAGE =====
+        $products = array_slice($allProducts, $offset, $limit);
 
         require "Views/pages/danh-muc.php";
     }
 
-    // CHI TIẾT SẢN PHẨM
     public function show()
     {
         $id = $_GET['id'] ?? 0;
@@ -50,11 +59,9 @@ class ProductController
         $relatedProducts = [];
 
         if ($product) {
-
-            $relatedProducts =
-                $this->productModel->getByCategory(
-                    $product['category_slug']
-                );
+            $relatedProducts = $this->productModel->getByCategory(
+                $product['category_slug']
+            );
         }
 
         require "Views/pages/chi-tiet-san-pham.php";

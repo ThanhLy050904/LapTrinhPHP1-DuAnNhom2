@@ -4,10 +4,9 @@ class UserModel
 {
     private $conn;
 
-    public function __construct()
+    public function __construct($pdo)
     {
-        $database = new Database();
-        $this->conn = $database->connect();
+        $this->conn = $pdo;
     }
 
     public function register($fullname, $email, $password, $phone, $address, $avatar)
@@ -15,27 +14,28 @@ class UserModel
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
         $sql = "INSERT INTO users
-(
-    full_name,
-    email,
-    password,
-    phone,
-    address,
-    avatar,
-    role,
-    created_at
-)
-VALUES
-(
-    :fullname,
-    :email,
-    :password,
-    :phone,
-    :address,
-    :avatar,
-    'user',
-    NOW()
-)";
+        (
+            full_name,
+            email,
+            password,
+            phone,
+            address,
+            avatar,
+            role,
+            created_at
+        )
+        VALUES
+        (
+            :fullname,
+            :email,
+            :password,
+            :phone,
+            :address,
+            :avatar,
+            'user',
+            NOW()
+        )";
+
         $stmt = $this->conn->prepare($sql);
 
         return $stmt->execute([
@@ -50,32 +50,20 @@ VALUES
 
     public function isEmailExists($email)
     {
-        $sql = "SELECT id
-                FROM users
-                WHERE email = :email
-                LIMIT 1";
+        $sql = "SELECT id FROM users WHERE email = :email LIMIT 1";
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute([
-            ':email' => $email
-        ]);
+        $stmt->execute([':email' => $email]);
 
         return $stmt->fetch() ? true : false;
     }
 
     public function getUserByEmail($email)
     {
-        $sql = "SELECT *
-                FROM users
-                WHERE email = :email
-                LIMIT 1";
+        $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute([
-            ':email' => $email
-        ]);
+        $stmt->execute([':email' => $email]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -85,25 +73,21 @@ VALUES
         $sql = "SELECT * FROM users WHERE id = :id LIMIT 1";
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute([
-            ':id' => $id
-        ]);
+        $stmt->execute([':id' => $id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     public function getUserByEmailOnly($email)
     {
         $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
 
         $stmt = $this->conn->prepare($sql);
-
-        $stmt->execute([
-            ':email' => $email
-        ]);
+        $stmt->execute([':email' => $email]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
     public function updatePasswordById($id, $password)
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -117,11 +101,10 @@ VALUES
             ':id' => $id
         ]);
     }
+
     public function updateAvatar($id, $avatar)
     {
-        $sql = "UPDATE users
-            SET avatar = :avatar
-            WHERE id = :id";
+        $sql = "UPDATE users SET avatar = :avatar WHERE id = :id";
 
         $stmt = $this->conn->prepare($sql);
 

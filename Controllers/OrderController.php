@@ -5,11 +5,11 @@ class OrderController
     private $cartModel;
     private $orderModel;
 
-    public function __construct()
-    {
-        $this->cartModel = new CartModel();
-        $this->orderModel = new OrderModel();
-    }
+   public function __construct($pdo)
+{
+    $this->cartModel = new CartModel($pdo);
+    $this->orderModel = new OrderModel($pdo);
+}
 
     // Trang thanh toán
     public function checkout()
