@@ -18,7 +18,13 @@ class OrderModel
         $stmt = $this->conn->prepare($sql);
 
         $stmt->execute([
-            $userId, $fullName, $email, $phone, $address, $paymentMethod, $totalPrice
+            $userId,
+            $fullName,
+            $email,
+            $phone,
+            $address,
+            $paymentMethod,
+            $totalPrice
         ]);
 
         return $this->conn->lastInsertId();
@@ -32,7 +38,11 @@ class OrderModel
         $stmt = $this->conn->prepare($sql);
 
         return $stmt->execute([
-            $orderId, $productId, $size, $quantity, $price
+            $orderId,
+            $productId,
+            $size,
+            $quantity,
+            $price
         ]);
     }
 
@@ -73,7 +83,128 @@ class OrderModel
 
     public function updateStatus($id, $status)
     {
-        return $this->conn->prepare("UPDATE orders SET status=? WHERE id=?")
+        $stmt = $this->conn->prepare(
+            "SELECT status FROM orders WHERE id=?"
+        );
+
+        $stmt->execute([$id]);
+
+        $current = $stmt->fetchColumn();
+
+        if (!$current) {
+            return false;
+        }
+
+        // Đơn hoàn thành hoặc đã hủy thì khóa luôn
+        if (
+            $current == 'hoan_thanh' ||
+            $current == 'da_huy'
+        ) {
+            return false;
+        }
+
+        return $this->conn
+            ->prepare("UPDATE orders SET status=? WHERE id=?")
             ->execute([$status, $id]);
     }
+    public function searchOrders($keyword = '', $status = '')
+    {
+        $sql = "SELECT * FROM orders WHERE 1";
+
+        $params = [];
+
+        if (!empty($keyword)) {
+            $sql .= " AND (
+            id LIKE ?
+            OR full_name LIKE ?
+            OR phone LIKE ?
+        )";
+
+            $params[] = "%$keyword%";
+            $params[] = "%$keyword%";
+            $params[] = "%$keyword%";
+        }
+
+        if (!empty($status)) {
+            $sql .= " AND status = ?";
+            $params[] = $status;
+        }
+
+        $sql .= " ORDER BY id DESC";
+
+        $stmt = $this->conn->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getOrderStats()
+    {
+        return [
+            'total' => $this->conn->query(
+                "SELECT COUNT(*) FROM orders"
+            )->fetchColumn(),
+
+            'pending' => $this->conn->query(
+                "SELECT COUNT(*) FROM orders
+             WHERE status='cho_xac_nhan'"
+            )->fetchColumn(),
+
+            'confirmed' => $this->conn->query(
+                "SELECT COUNT(*) FROM orders
+             WHERE status='da_xac_nhan'"
+            )->fetchColumn(),
+
+            'shipping' => $this->conn->query(
+                "SELECT COUNT(*) FROM orders
+             WHERE status='dang_giao'"
+            )->fetchColumn(),
+
+            'completed' => $this->conn->query(
+                "SELECT COUNT(*) FROM orders
+             WHERE status='hoan_thanh'"
+            )->fetchColumn(),
+
+            'cancelled' => $this->conn->query(
+                "SELECT COUNT(*) FROM orders
+             WHERE status='da_huy'"
+            )->fetchColumn(),
+        ];
+    }
+    public function getRevenue()
+    {
+        return $this->conn
+            ->query("
+            SELECT SUM(total_price)
+            FROM orders
+            WHERE status='hoan_thanh'
+        ")
+            ->fetchColumn();
+    }
+    public function getRevenueMonth()
+    {
+        return $this->conn
+            ->query("
+            SELECT SUM(total_price)
+            FROM orders
+            WHERE status='hoan_thanh'
+            AND MONTH(created_at)=MONTH(CURRENT_DATE())
+            AND YEAR(created_at)=YEAR(CURRENT_DATE())
+        ")
+            ->fetchColumn();
+    }
+    public function getOrderById($id)
+    {
+        $stmt = $this->conn->prepare("
+        SELECT *
+        FROM orders
+        WHERE id = ?
+        LIMIT 1
+    ");
+
+        $stmt->execute([$id]);
+
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
 }

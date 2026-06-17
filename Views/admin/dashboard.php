@@ -1,6 +1,5 @@
 <?php
 $section = $_GET['section'] ?? 'dashboard';
-include __DIR__ . '/admin-data.php';
 ?>
 
 <link rel="stylesheet" href="Views/css/admin.css">

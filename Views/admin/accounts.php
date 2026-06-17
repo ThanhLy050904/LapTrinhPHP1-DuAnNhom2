@@ -12,7 +12,7 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
 }
 ?>
 
-<style>
+<!-- <style>
 .admin-center {
     display:flex;
     justify-content:center;
@@ -75,84 +75,88 @@ input, select {
     border:1px solid #ddd;
     border-radius:8px;
 }
-</style>
-
+</style> -->
+<link rel="stylesheet" href="Views/css/admin.css">
 <div class="admin-center">
-<div class="admin-box">
-<div class="card">
+    <div class="admin-box">
+        <div class="card">
 
-    <!-- HEADER -->
-    <div class="header">
-        <h2>Quản lý tài khoản</h2>
-        <a class="btn btn-primary" href="?pages=admin&section=accounts&action=add">+ Thêm</a>
-    </div>
-
-    <!-- FORM -->
-    <?php if ($adminAction === 'add' || $adminAction === 'edit'): ?>
-        <form method="post">
-            <input type="hidden" name="admin_form" value="accounts">
-            <input type="hidden" name="id" value="<?= $accountEdit['id'] ?? '' ?>">
-
-            <div class="form-grid">
-                <input name="name" placeholder="Tên"
-                       value="<?= $accountEdit['full_name'] ?? '' ?>">
-
-                <input name="email" placeholder="Email"
-                       value="<?= $accountEdit['email'] ?? '' ?>">
-
-                <select name="role">
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
-
-                <input type="password" name="password"
-                       placeholder="Mật khẩu (khi thêm)">
+            <!-- HEADER -->
+            <div class="header">
+                <h2>Quản lý tài khoản</h2>
+                <a class="btn btn-primary" href="?pages=admin&section=accounts&action=add">+ Thêm</a>
             </div>
 
-            <button class="btn btn-primary">Lưu</button>
-            <a class="btn btn-secondary" href="?pages=admin&section=accounts">Hủy</a>
-        </form>
-    <?php endif; ?>
+            <!-- FORM -->
+            <?php if ($adminAction === 'add' || $adminAction === 'edit'): ?>
+                <form method="post">
+                    <input type="hidden" name="admin_form" value="accounts">
+                    <input type="hidden" name="id" value="<?= $accountEdit['id'] ?? '' ?>">
 
-    <!-- TABLE -->
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Tên</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Trạng thái</th>
-            <th>Action</th>
-        </tr>
+                    <div class="form-grid">
+                        <input name="name" placeholder="Tên" value="<?= $accountEdit['full_name'] ?? '' ?>">
 
-        <?php foreach ($adminAccounts as $a): ?>
-        <tr>
-            <td>#<?= $a['id'] ?></td>
-            <td><?= $a['full_name'] ?></td>
-            <td><?= $a['email'] ?></td>
-            <td><?= $a['role'] ?></td>
-            <td><?= $a['status'] ?? 'active' ?></td>
-            <td>
-                <a class="btn btn-secondary"
-                   href="?pages=admin&section=accounts&action=edit&id=<?= $a['id'] ?>">
-                   Sửa
-                </a>
+                        <input name="email" placeholder="Email" value="<?= $accountEdit['email'] ?? '' ?>">
 
-                <a class="btn btn-primary"
-                   href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>">
-                   Lock
-                </a>
+                        <select name="role">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
 
-                <a class="btn btn-danger"
-                   onclick="return confirm('Xóa?')"
-                   href="?pages=admin&section=accounts&action=delete&id=<?= $a['id'] ?>">
-                   Xóa
-                </a>
-            </td>
-        </tr>
-        <?php endforeach; ?>
-    </table>
+                        <input type="password" name="password" placeholder="Mật khẩu (khi thêm)">
+                    </div>
 
-</div>
-</div>
+                    <button class="btn btn-primary">Lưu</button>
+                    <a class="btn btn-secondary" href="?pages=admin&section=accounts">Hủy</a>
+                </form>
+            <?php endif; ?>
+
+            <!-- TABLE -->
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Tên</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Trạng thái</th>
+                    <th>Action</th>
+                </tr>
+
+                <?php foreach ($adminAccounts as $a): ?>
+                    <tr>
+                        <td>#<?= $a['id'] ?></td>
+                        <td><?= $a['full_name'] ?></td>
+                        <td><?= $a['email'] ?></td>
+                        <td><?= $a['role'] ?></td>
+                        <td class="<?= ($a['status'] ?? 'active') === 'active' ? 'status-active' : 'status-block' ?>">
+                            <?= $a['status'] ?>
+                        </td>
+                        <td>
+                            <a class="btn btn-secondary"
+                                href="?pages=admin&section=accounts&action=edit&id=<?= $a['id'] ?>">
+                                Sửa
+                            </a>
+
+                            <?php if (($a['status'] ?? 'active') === 'active'): ?>
+                                <a class="btn btn-primary" href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>">
+                                    Lock
+                                </a>
+                            <?php else: ?>
+                                <a class="btn btn-secondary"
+                                    href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>">
+                                    Unlock
+                                </a>
+                            <?php endif; ?>
+
+                            <a class="btn btn-danger" onclick="return confirm('Xóa?')"
+                                href="?pages=admin&section=accounts&action=delete&id=<?= $a['id'] ?>">
+                                Xóa
+                            </a>
+                        </td>
+                    </tr>
+                <?php endforeach; ?>
+            </table>
+
+        </div>
+    </div>
 </div>

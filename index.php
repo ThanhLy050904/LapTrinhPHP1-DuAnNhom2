@@ -87,7 +87,8 @@ if (isset($_SESSION['user']['id'])) {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="Views/css/header.css">
 
@@ -99,275 +100,302 @@ if (isset($_SESSION['user']['id'])) {
 
 <body>
 
-<?php if ($page !== 'admin'): ?>
-    <?php include "Views/layouts/header.php"; ?>
-<?php endif; ?>
-
-<?php
-
-switch ($page) {
-
-    case "home":
-        $controller = new HomeController($pdo);
-        $controller->index();
-        break;
-
-    case "chi-tiet-san-pham":
-        $controller = new ProductController($pdo);
-        $controller->show();
-        break;
-
-    case 'danh-muc':
-        $controller = new ProductController($pdo);
-        $controller->category();
-        break;
-
-    // ================= CART =================
-    case "gio-hang":
-    $controller = new CartController($pdo);
-    
-    $action = $_GET['action'] ?? '';
-    
-    if ($action === 'update-quantity') {
-        $controller->updateQuantity();
-    } 
-    elseif ($action === 'remove') {
-        $controller->remove();
-    } 
-    else {
-        $controller->index();
-    }
-    break;
-
-case "cart-add":
-    $controller = new CartController($pdo);
-    $controller->add();
-    break;
-
-case "cart-remove":
-    $controller = new CartController($pdo);
-    $controller->remove();
-    break;
-
-    // ================= CHECKOUT =================
-    case 'thanh-toan':
-
-        $controller = new OrderController($pdo);
-
-        if (isset($_GET['action']) && $_GET['action'] == 'place-order') {
-            $controller->placeOrder();
-        } else {
-            $controller->checkout();
-        }
-
-        break;
-
-    // ================= ORDERS =================
-    case 'don-hang-cua-toi':
-        $controller = new OrderController($pdo);
-        $controller->myOrders();
-        break;
-
-    case 'dat-hang-thanh-cong':
-        require 'Views/pages/dat-hang-thanh-cong.php';
-        break;
-
-    case "thank-you":
-        $order = $_SESSION['order'] ?? null;
-        require "Views/pages/thank-you.php";
-        break;
-
-    // ================= AUTH =================
-    case "dang-nhap":
-        $auth = new AuthController($pdo);
-        if ($action === 'login') {
-            $auth->login();
-        } elseif ($action === 'logout') {
-            $auth->logout();
-        } else {
-            $auth->showLoginForm();
-        }
-        break;
-
-    case "dang-ky":
-        $controller = new AuthController($pdo);
-        $controller->register();
-        break;
-
-    case "quen-mat-khau":
-        $auth = new AuthController($pdo);
-        $auth->forgotPassword();
-        break;
-
-    case "reset-password":
-        $auth = new AuthController($pdo);
-        $auth->resetPassword();
-        break;
-
-    case "tai-khoan-cua-toi":
-        $controller = new AccountController($pdo);
-        $controller->profile();
-        break;
-
-    case 'doi-avatar':
-        $controller = new AccountController($pdo);
-        $controller->changeAvatar();
-        break;
-
-    // ================= STATIC PAGES =================
-    case "lien-he":
-        require "Views/pages/lien-he.php";
-        break;
-
-    case "tin-tuc":
-        require "Views/pages/tin-tuc.php";
-        break;
-
-    case "tin-tuc-detail":
-        require "Views/pages/tin-tuc-detail.php";
-        break;
-
-    case "gioi-thieu":
-        require "Views/pages/gioi-thieu.php";
-        break;
-
-    // ================= ADMIN =================
-   case "admin":
-    checkAdmin();
-
-    $section = $_GET['section'] ?? 'dashboard';
-    $action  = $_GET['action'] ?? null;
-    $id      = $_GET['id'] ?? null;
-
-    ?>
-
-    <div class="admin-wrapper">
-
-        <!-- ================= SIDEBAR ================= -->
-        <aside class="sidebar">
-            <?php include "Views/admin/sidebar.php"; ?>
-        </aside>
-
-        <!-- ================= MAIN ================= -->
-        <main class="main-content">
-
-            <?php
-
-            // ================= PRODUCT ADMIN =================
-            if ($section === 'products') {
-
-                require_once "controllers/AdminProductController.php";
-                $controller = new AdminProductController($pdo);
-
-                if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller->store();
-                }
-
-                elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller->update($id);
-                }
-
-                elseif ($action === 'delete') {
-                    $controller->delete($id);
-                }
-
-                else {
-                    $controller->index();
-                }
-            }
-
-            // ================= CATEGORY ADMIN =================
-            elseif ($section === 'categories') {
-
-                require_once "controllers/AdminCategoryController.php";
-                $controller = new AdminCategoryController($pdo);
-
-                if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller->store();
-                }
-
-                elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller->update($id);
-                }
-
-                elseif ($action === 'delete') {
-                    $controller->delete($id);
-                }
-
-                else {
-                    $controller->index();
-                }
-            }
-            //================== ORDER ADMIN =================
-            elseif ($section === 'orders') {
-
-    require_once "controllers/AdminOrderController.php";
-    $order = new AdminOrderController($pdo);
-
-    if ($action === 'view') {
-        $order->show($id);
-    }
-
-    elseif ($action === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        $order->updateStatus($id);
-    }
-
-    elseif ($action === 'delete') {
-        $order->delete($id);
-    }
-
-    else {
-        $order->index();
-    }
-}
-
-
-
-elseif ($section === 'accounts') {
-
-    require_once "controllers/AdminAccountController.php";
-    $controller = new AdminAccountController($pdo);
-
-    if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        $controller->store();
-    }
-    elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-        $controller->update($id);
-    }
-    elseif ($action === 'delete') {
-        $controller->delete($id);
-    }
-    elseif ($action === 'lock') {
-        $controller->lock($id);
-    }
-    else {
-        $controller->index();
-    }
-}
-
-            // ================= DASHBOARD =================
-            else {
-                echo "<h2>📊 Dashboard Admin</h2>";
-                echo "<p>Chào mừng bạn đến trang quản trị</p>";
-            }
-
-            ?>
-
-        </main>
-
-    </div>
+    <?php if ($page !== 'admin'): ?>
+        <?php include "Views/layouts/header.php"; ?>
+    <?php endif; ?>
 
     <?php
-    break;
-    
 
-    default:
-        echo "<h1>404 NOT FOUND</h1>";
-        break;
-}
+    switch ($page) {
 
-include "Views/layouts/footer.php";
-?>
+        case "home":
+            $controller = new HomeController($pdo);
+            $controller->index();
+            break;
+
+        case "chi-tiet-san-pham":
+            $controller = new ProductController($pdo);
+            $controller->show();
+            break;
+
+        case 'danh-muc':
+            $controller = new ProductController($pdo);
+            $controller->category();
+            break;
+
+        // ================= CART =================
+        case "gio-hang":
+            $controller = new CartController($pdo);
+
+            $action = $_GET['action'] ?? '';
+
+            if ($action === 'update-quantity') {
+                $controller->updateQuantity();
+            } elseif ($action === 'remove') {
+                $controller->remove();
+            } else {
+                $controller->index();
+            }
+            break;
+
+        case "cart-add":
+            $controller = new CartController($pdo);
+            $controller->add();
+            break;
+
+        case "cart-remove":
+            $controller = new CartController($pdo);
+            $controller->remove();
+            break;
+
+        // ================= CHECKOUT =================
+        case 'thanh-toan':
+
+            $controller = new OrderController($pdo);
+
+            if (isset($_GET['action']) && $_GET['action'] == 'place-order') {
+                $controller->placeOrder();
+            } else {
+                $controller->checkout();
+            }
+
+            break;
+
+        // ================= ORDERS =================
+        case 'don-hang-cua-toi':
+            $controller = new OrderController($pdo);
+            $controller->myOrders();
+            break;
+
+        case 'dat-hang-thanh-cong':
+            require 'Views/pages/dat-hang-thanh-cong.php';
+            break;
+
+        case "thank-you":
+            $order = $_SESSION['order'] ?? null;
+            require "Views/pages/thank-you.php";
+            break;
+
+        // ================= AUTH =================
+        case "dang-nhap":
+            $auth = new AuthController($pdo);
+            if ($action === 'login') {
+                $auth->login();
+            } elseif ($action === 'logout') {
+                $auth->logout();
+            } else {
+                $auth->showLoginForm();
+            }
+            break;
+
+        case "dang-ky":
+            $controller = new AuthController($pdo);
+            $controller->register();
+            break;
+
+        case "quen-mat-khau":
+            $auth = new AuthController($pdo);
+            $auth->forgotPassword();
+            break;
+
+        case "reset-password":
+            $auth = new AuthController($pdo);
+            $auth->resetPassword();
+            break;
+
+        case "tai-khoan-cua-toi":
+            $controller = new AccountController($pdo);
+            $controller->profile();
+            break;
+
+        case 'doi-avatar':
+            $controller = new AccountController($pdo);
+            $controller->changeAvatar();
+            break;
+
+        // ================= STATIC PAGES =================
+        case "lien-he":
+            require "Views/pages/lien-he.php";
+            break;
+
+        case "tin-tuc":
+            require "Views/pages/tin-tuc.php";
+            break;
+
+        case "tin-tuc-detail":
+            require "Views/pages/tin-tuc-detail.php";
+            break;
+
+        case "gioi-thieu":
+            require "Views/pages/gioi-thieu.php";
+            break;
+
+        // ================= ADMIN =================
+        case "admin":
+            checkAdmin();
+
+            $section = $_GET['section'] ?? 'dashboard';
+            $action = $_GET['action'] ?? null;
+            $id = $_GET['id'] ?? null;
+            ?>
+
+            <style>
+                .admin-wrapper {
+                    display: flex;
+                    min-height: 100vh;
+                    background: #f4f6fb;
+                }
+
+                .sidebar {
+                    width: 250px;
+                    position: fixed;
+                    left: 0;
+                    top: 0;
+                    bottom: 0;
+                    background: #fff;
+                    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+                    z-index: 1000;
+                }
+
+                /* MAIN CONTENT - FULL WIDTH */
+                .main-content {
+                    margin-left: 250px;
+                    width: calc(100% - 250px);
+                    padding: 24px 32px;
+                    background: #f4f6fb;
+                    min-height: 100vh;
+                }
+
+                /* Fix các phần nội dung bên trong */
+                .admin-center,
+                .admin-box,
+                .admin-card,
+                .card,
+                .table-responsive {
+                    width: 100% !important;
+                    max-width: none !important;
+                    margin: 0 !important;
+                }
+
+                .admin-card {
+                    padding: 20px;
+                }
+            </style>
+
+            <div class="admin-wrapper">
+                <!-- SIDEBAR -->
+                <aside class="sidebar">
+                    <?php include "Views/admin/sidebar.php"; ?>
+                </aside>
+
+                <!-- MAIN CONTENT -->
+                <main class="main-content">
+                    <?php
+
+                    // ================= PRODUCT ADMIN =================
+                    if ($section === 'products') {
+                        require_once "controllers/AdminProductController.php";
+                        $controller = new AdminProductController($pdo);
+
+                        if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $controller->store();
+                        } elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $controller->update($id);
+                        } elseif ($action === 'delete') {
+                            $controller->delete($id);
+                        } else {
+                            $controller->index();
+                        }
+                    }
+
+                    // ================= CATEGORY ADMIN =================
+                    elseif ($section === 'categories') {
+                        require_once "controllers/AdminCategoryController.php";
+                        $controller = new AdminCategoryController($pdo);
+
+                        if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $controller->store();
+                        } elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $controller->update($id);
+                        } elseif ($action === 'delete') {
+                            $controller->delete($id);
+                        } else {
+                            $controller->index();
+                        }
+                    }
+
+                    // ================= ORDER ADMIN =================
+                    elseif ($section === 'orders') {
+
+                        require_once "Controllers/AdminOrderController.php";
+                        $orderController = new AdminOrderController($pdo);
+
+                        if ($action === 'view') {
+
+                            $orderController->view($id);
+
+                        } elseif ($action === 'updateStatus' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+
+                            $id = $_POST['id'] ?? 0;
+                            $status = $_POST['status'] ?? '';
+
+                            $orderController->updateStatus($id, $status);
+
+                        } elseif ($action === 'delete') {
+
+                            $orderController->delete($id);
+
+                        } elseif ($action === 'invoice') {
+                            $orderController->invoice($id);
+                        } else {
+
+                            $orderController->index();
+                        }
+
+                    }
+
+                    // ================= ACCOUNT ADMIN =================
+                    elseif ($section === 'accounts') {
+                        require_once "controllers/AdminAccountController.php";
+                        $controller = new AdminAccountController($pdo);
+
+                        if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $controller->store();
+                        } elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                            $controller->update($id);
+                        } elseif ($action === 'delete') {
+                            $controller->delete($id);
+                        } elseif ($action === 'lock') {
+                            $controller->lock($id);
+                        } else {
+                            $controller->index();
+                        }
+                    }
+
+                    // ================= DASHBOARD =================
+                    else {
+                        echo "<h2>📊 Dashboard Admin</h2>";
+                        echo "<p>Chào mừng bạn đến trang quản trị KENZIE</p>";
+                    }
+
+                    ?>
+                </main>
+            </div>
+
+
+            <?php
+            break;
+
+
+        default:
+            echo "<h1>404 NOT FOUND</h1>";
+            break;
+    }
+
+if ($page !== 'admin') {
+    include "Views/layouts/footer.php";
+}    ?>
 
 </body>
+
 </html>

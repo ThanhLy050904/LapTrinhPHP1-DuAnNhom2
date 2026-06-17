@@ -157,18 +157,18 @@ public function updateUser($id, $data)
     ]);
 }
 
-// Khóa / mở khóa user
-public function toggleStatus($id)
-{
-    $user = $this->getUserById($id);
+// // Khóa / mở khóa user
+// public function toggleStatus($id)
+// {
+//     $user = $this->getUserById($id);
 
-    $newStatus = ($user['status'] === 'locked') ? 'active' : 'locked';
+//     $newStatus = ($user['status'] === 'locked') ? 'active' : 'locked';
 
-    $sql = "UPDATE users SET status = ? WHERE id = ?";
-    $stmt = $this->conn->prepare($sql);
+//     $sql = "UPDATE users SET status = ? WHERE id = ?";
+//     $stmt = $this->conn->prepare($sql);
 
-    return $stmt->execute([$newStatus, $id]);
-}
+//     return $stmt->execute([$newStatus, $id]);
+// }
 
 // ================= ADMIN FUNCTIONS =================
 
@@ -223,16 +223,20 @@ public function delete($id)
     return $stmt->execute([$id]);
 }
 
-// Lock / unlock
 public function toggleLock($id)
 {
     $user = $this->getUserById($id);
 
-    $new = ($user['status'] ?? 'active') === 'locked' ? 'active' : 'locked';
+    if (!$user) return false;
+
+    $current = $user['status'] ?? 'active';
+
+    // CHUẨN THEO DB: active <-> locked
+    $newStatus = ($current === 'locked') ? 'active' : 'locked';
 
     $sql = "UPDATE users SET status = ? WHERE id = ?";
     $stmt = $this->conn->prepare($sql);
 
-    return $stmt->execute([$new, $id]);
+    return $stmt->execute([$newStatus, $id]);
 }
 }

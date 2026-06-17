@@ -10,7 +10,7 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
     }
 }
 ?>
-<style>
+<!-- <style>
 .category-form-card{
     padding:30px;
     margin-bottom:25px;
@@ -80,7 +80,8 @@ if ($adminAction === 'edit' && isset($_GET['id'])) {
     gap:10px;
     margin-top:25px;
 }
-</style>
+</style> -->
+<link rel="stylesheet" href="Views/css/admin.css">
 <div class="admin-card">
     <div class="page-header">
         <div>
