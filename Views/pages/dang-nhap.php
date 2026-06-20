@@ -1,10 +1,10 @@
 <main class="container py-5">
 
-    <div class="row justify-content-center">
+    <div class="login-card">
 
         <div class="col-lg-5 col-md-7">
 
-            <div class="card shadow">
+        <form action="?pages=dang-nhap&action=login" method="POST">
 
                 <div class="card-header text-center">
                     <h3>Đăng nhập</h3>
@@ -12,13 +12,13 @@
                         Chào mừng bạn quay trở lại
                     </p>
                 </div>
+            <?php endif; ?>
 
                 <div class="card-body">
 
                     <form action="?pages=dang-nhap&action=login" method="POST">
 
                         <?php if (isset($_GET['locked']) && $_GET['locked'] == '1'): ?>
-                            <div class="alert alert-danger">
                                 Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.
                             </div>
                         <?php endif; ?>
@@ -72,27 +72,50 @@
 
                     </form>
 
-                    <div class="text-center mt-4">
-
-                        <a href="?pages=quen-mat-khau">
-                            Quên mật khẩu?
-                        </a>
-
-                        <hr>
-
-                        <p class="mb-0">
-                            Chưa có tài khoản?
-
-                            <a href="?pages=dang-ky">
-                                Đăng ký ngay
-                            </a>
-                        </p>
-
+                <?php if (isset($errors['email'])): ?>
+                    <div class="text-danger small mt-1">
+                        <?= $errors['email'] ?>
                     </div>
-
-                </div>
-
+                <?php endif; ?>
             </div>
+
+
+            <div class="mb-3">
+                <label>Mật khẩu</label>
+
+                <input 
+                    type="password" 
+                    name="password"
+                    class="form-control <?= isset($errors['password']) ? 'is-invalid' : '' ?>"
+                    placeholder="Nhập mật khẩu">
+
+                <?php if (isset($errors['password'])): ?>
+                    <div class="text-danger small mt-1">
+                        <?= $errors['password'] ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+
+
+            <button type="submit" class="login-btn">
+                Đăng nhập
+            </button>
+
+        </form>
+
+
+        <div class="login-footer">
+
+            <a href="?pages=quen-mat-khau">
+                Quên mật khẩu?
+            </a>
+
+            <p>
+                Chưa có tài khoản?
+                <a href="?pages=dang-ky">
+                    Đăng ký ngay
+                </a>
+            </p>
 
         </div>
 
