@@ -104,28 +104,31 @@ class AuthController
     {
         $userModel = $this->userModel;
         $errors = [];
-
+    
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
+    
             $email = trim($_POST['email'] ?? '');
             $password = $_POST['password'] ?? '';
-
+    
             if (empty($email)) {
                 $errors['email'] = "Vui lòng nhập email.";
             }
-
+    
             if (empty($password)) {
                 $errors['password'] = "Vui lòng nhập mật khẩu.";
             }
-
+    
             if (empty($errors)) {
-
                 $user = $userModel->getUserByEmail($email);
-
+            
                 if ($user && isset($user['status']) && $user['status'] === 'locked') {
-                    $errors['login'] = "Tài khoản đang bị khóa.";
+                    
+                    $reasonText = $user['lock_reason'] ?? "Vi phạm chính sách bảo mật hoặc điều khoản hệ thống.";
+            
+                    $errors['login'] = "Tài khoản của bạn đã bị khóa!<br><strong>Lý do:</strong> " . htmlspecialchars($reasonText) . "<br>Vui lòng liên hệ Admin để được hỗ trợ.";
+                    
                 } elseif ($user && password_verify($password, $user['password'])) {
-
+    
                     $_SESSION['user'] = [
                         'id' => $user['id'],
                         'full_name' => $user['full_name'],
@@ -133,7 +136,7 @@ class AuthController
                         'role' => $user['role'],
                         'avatar' => $user['avatar']
                     ];
-
+    
                     header("Location: ?pages=home");
                     exit();
                 } else {
@@ -141,7 +144,7 @@ class AuthController
                 }
             }
         }
-
+    
         require "Views/pages/dang-nhap.php";
     }
 
@@ -230,4 +233,5 @@ class AuthController
         header("Location: ?pages=home");
         exit();
     }
+    
 }

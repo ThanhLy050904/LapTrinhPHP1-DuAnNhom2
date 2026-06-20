@@ -375,7 +375,10 @@ if (isset($_SESSION['user']['id'])) {
                             $controller->delete($id);
                         } elseif ($action === 'lock') {
                             $controller->lock($id);
-                        } else {
+                        } elseif ($action === 'unlock') {
+                            $controller->unlock($id);
+                        } 
+                        else {
                             $controller->index();
                         }
                     }

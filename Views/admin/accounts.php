@@ -138,12 +138,42 @@ input, select {
                             </a>
 
                             <?php if (($a['status'] ?? 'active') === 'active'): ?>
-                                <a class="btn btn-primary" href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>">
-                                    Lock
-                                </a>
+                                <div style="display: inline-block; position: relative;">
+                                    <button class="btn btn-primary" onclick="toggleDropdown(<?= $a['id'] ?>)"
+                                        style="cursor: pointer;">
+                                        Lock ▾
+                                    </button>
+
+                                    <div id="dropdown-reason-<?= $a['id'] ?>" class="reason-dropdown"
+                                        style="display: none; position: absolute; z-index: 100; background: #fff; border: 1px solid #ddd; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.15); width: 260px; right: 0; padding: 10px 0;">
+
+                                        <a style="display: block; padding: 8px 12px; text-decoration: none; color: #333; font-size: 13px; text-align: left;"
+                                            href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>&reason=1">⚠️ Vi
+                                            phạm điều khoản</a>
+                                        <a style="display: block; padding: 8px 12px; text-decoration: none; color: #333; font-size: 13px; text-align: left;"
+                                            href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>&reason=2">🚫 Spam
+                                            / Phát tán mã độc</a>
+                                        <a style="display: block; padding: 8px 12px; text-decoration: none; color: #333; font-size: 13px; text-align: left;"
+                                            href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>&reason=3">🔒 Tài
+                                            khoản bị xâm nhập</a>
+
+                                        <hr style="margin: 5px 0; border-color: #eee;">
+
+                                        <form
+                                            action="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>&reason=custom"
+                                            method="POST" style="padding: 5px 12px 0 12px;">
+                                            <input type="text" name="custom_note" placeholder="Hoặc gõ ghi chú khác..." required
+                                                style="width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 6px; font-size: 12px; margin-bottom: 6px; box-sizing: border-box;">
+                                            <button type="submit" class="btn btn-danger"
+                                                style="width: 100%; font-size: 11px; padding: 4px 0; border-radius: 6px;">
+                                                Lock với ghi chú này
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             <?php else: ?>
                                 <a class="btn btn-secondary"
-                                    href="?pages=admin&section=accounts&action=lock&id=<?= $a['id'] ?>">
+                                    href="?pages=admin&section=accounts&action=unlock&id=<?= $a['id'] ?>">
                                     Unlock
                                 </a>
                             <?php endif; ?>
@@ -160,3 +190,24 @@ input, select {
         </div>
     </div>
 </div>
+<script>
+    function toggleDropdown(userId) {
+        document.querySelectorAll('.reason-dropdown').forEach(el => {
+            if (el.id !== 'dropdown-reason-' + userId) el.style.display = 'none';
+        });
+        const unset_el = document.getElementById('dropdown-reason-' + userId);
+        unset_el.style.display = (unset_el.style.display === 'none') ? 'block' : 'none';
+    }
+
+    document.querySelectorAll('.reason-dropdown').forEach(el => {
+        el.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+
+    window.onclick = function (event) {
+        if (!event.target.matches('.btn-primary')) {
+            document.querySelectorAll('.reason-dropdown').forEach(el => el.style.display = 'none');
+        }
+    }
+</script>
