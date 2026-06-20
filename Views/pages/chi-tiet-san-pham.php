@@ -4,7 +4,7 @@ $product = $product ?? null;
 $relatedProducts = $relatedProducts ?? [];
 
 if (!$product):
-    ?>
+?>
 
     <div class="container py-5 text-center">
         <h2 class="text-danger fw-bold">Không tìm thấy sản phẩm!</h2>
@@ -13,7 +13,8 @@ if (!$product):
         </a>
     </div>
 
-    <?php return; endif; ?>
+<?php return;
+endif; ?>
 
 <!-- LINK CSS -->
 <link rel="stylesheet" href="Views/css/chi-tiet-san-pham.css">
@@ -32,8 +33,12 @@ if (!$product):
 
                 <!-- IMAGE -->
                 <div class="col-lg-6">
-                    <img src="Views/image/<?= htmlspecialchars($product['image_main']) ?>" class="detail-image"
-                        alt="<?= htmlspecialchars($product['name']) ?>">
+
+                  
+
+                    <img src="<?= htmlspecialchars($product['image_main']) ?>"
+     class="detail-image"
+     alt="<?= htmlspecialchars($product['name']) ?>">
                 </div>
 
                 <!-- INFO -->
@@ -162,7 +167,7 @@ if (!$product):
 <script>
     document.querySelectorAll('.size-btn').forEach(btn => {
 
-        btn.addEventListener('click', function () {
+        btn.addEventListener('click', function() {
 
             document.querySelectorAll('.size-btn').forEach(item => {
                 item.classList.remove('active');
@@ -208,5 +213,4 @@ if (!$product):
 
         alert('✅ Đã thêm ' + qty + ' sản phẩm vào giỏ hàng!');
     }
-
 </script>

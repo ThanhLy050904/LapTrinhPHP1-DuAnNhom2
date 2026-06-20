@@ -16,13 +16,13 @@ if ($page_number < 1) $page_number = 1;
     <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
 
         <a href="?pages=danh-muc&category=all"
-           class="category-btn <?= $current_category === 'all' ? 'active' : '' ?>">
+            class="category-btn <?= $current_category === 'all' ? 'active' : '' ?>">
             Tất cả
         </a>
 
         <?php foreach ($categories as $category): ?>
             <a href="?pages=danh-muc&category=<?= htmlspecialchars($category['slug']) ?>"
-               class="category-btn <?= $current_category === $category['slug'] ? 'active' : '' ?>">
+                class="category-btn <?= $current_category === $category['slug'] ? 'active' : '' ?>">
                 <?= htmlspecialchars($category['name']) ?>
             </a>
         <?php endforeach; ?>
@@ -37,10 +37,10 @@ if ($page_number < 1) $page_number = 1;
 
             <div class="input-group">
                 <input type="text"
-                       name="keyword"
-                       class="form-control"
-                       placeholder="🔍 Tìm iPhone, Samsung, Xiaomi..."
-                       value="<?= htmlspecialchars($_GET['keyword'] ?? '') ?>">
+                    name="keyword"
+                    class="form-control"
+                    placeholder="🔍 Tìm iPhone, Samsung, Xiaomi..."
+                    value="<?= htmlspecialchars($_GET['keyword'] ?? '') ?>">
 
                 <button class="btn btn-dark" type="submit">
                     Tìm kiếm
@@ -61,10 +61,10 @@ if ($page_number < 1) $page_number = 1;
         <?php foreach ($products as $product): ?>
             <div class="col-lg-3 col-md-6 d-flex">
                 <div class="card product-card w-100">
-
-                    <img src="Views/image/<?= htmlspecialchars($product['image_main']) ?>"
-                         class="product-image"
-                         alt="<?= htmlspecialchars($product['name']) ?>">
+                       <!-- thêm ơi đây -->
+                    <img src="<?= htmlspecialchars($product['image_main']) ?>"
+                        class="product-image"
+                        alt="<?= htmlspecialchars($product['name']) ?>">
 
                     <div class="card-body">
                         <div>
@@ -82,7 +82,7 @@ if ($page_number < 1) $page_number = 1;
                         </div>
 
                         <a href="?pages=chi-tiet-san-pham&id=<?= $product['id'] ?>"
-                           class="btn btn-dark w-100 btn-detail">
+                            class="btn btn-dark w-100 btn-detail">
                             Chi Tiết
                         </a>
                     </div>
@@ -99,21 +99,21 @@ if ($page_number < 1) $page_number = 1;
 
             <?php if ($page_number > 1): ?>
                 <a class="btn btn-outline-dark"
-                   href="?pages=danh-muc&category=<?= $current_category ?>&keyword=<?= $_GET['keyword'] ?? '' ?>&page_number=<?= $page_number - 1 ?>">
+                    href="?pages=danh-muc&category=<?= $current_category ?>&keyword=<?= $_GET['keyword'] ?? '' ?>&page_number=<?= $page_number - 1 ?>">
                     Trước
                 </a>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                 <a class="btn <?= ($i == $page_number) ? 'btn-dark' : 'btn-outline-dark' ?>"
-                   href="?pages=danh-muc&category=<?= $current_category ?>&keyword=<?= $_GET['keyword'] ?? '' ?>&page_number=<?= $i ?>">
+                    href="?pages=danh-muc&category=<?= $current_category ?>&keyword=<?= $_GET['keyword'] ?? '' ?>&page_number=<?= $i ?>">
                     <?= $i ?>
                 </a>
             <?php endfor; ?>
 
             <?php if ($page_number < $totalPages): ?>
                 <a class="btn btn-outline-dark"
-                   href="?pages=danh-muc&category=<?= $current_category ?>&keyword=<?= $_GET['keyword'] ?? '' ?>&page_number=<?= $page_number + 1 ?>">
+                    href="?pages=danh-muc&category=<?= $current_category ?>&keyword=<?= $_GET['keyword'] ?? '' ?>&page_number=<?= $page_number + 1 ?>">
                     Tiếp
                 </a>
             <?php endif; ?>

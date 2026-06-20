@@ -46,6 +46,9 @@ require_once "models/CategoryModel.php";
 require_once "models/UserModel.php";
 require_once "Models/CartModel.php";
 require_once "Models/OrderModel.php";
+require_once "Models/AdminProductModel.php";
+require_once "Models/AdminCategoryModel.php";
+
 
 // ================= PDO =================
 $db = new Database();
@@ -60,6 +63,7 @@ require_once "controllers/CheckoutController.php";
 require_once "controllers/AuthController.php";
 require_once "controllers/AccountController.php";
 require_once "Controllers/OrderController.php";
+
 
 // ================= CHECK USER LOCK =================
 if (isset($_SESSION['user']['id'])) {
@@ -166,6 +170,10 @@ if (isset($_SESSION['user']['id'])) {
             $controller = new OrderController($pdo);
             $controller->myOrders();
             break;
+        case 'chi-tiet-don-hang':
+    $controller = new OrderController($pdo);
+    $controller->detail();
+    break;
 
         case 'dat-hang-thanh-cong':
             require 'Views/pages/dat-hang-thanh-cong.php';
@@ -371,6 +379,23 @@ if (isset($_SESSION['user']['id'])) {
                             $controller->index();
                         }
                     }
+
+                    // elseif ($section === 'dashboard') {
+                    //     require_once "controllers/AdminAccountController.php";
+                    //     $controller = new AdminAccountController($pdo);
+
+                    //     if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    //         $controller->store();
+                    //     } elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+                    //         $controller->update($id);
+                    //     } elseif ($action === 'delete') {
+                    //         $controller->delete($id);
+                    //     } elseif ($action === 'lock') {
+                    //         $controller->lock($id);
+                    //     } else {
+                    //         $controller->index();
+                    //     }
+                    // }
 
                     // ================= DASHBOARD =================
                     else {

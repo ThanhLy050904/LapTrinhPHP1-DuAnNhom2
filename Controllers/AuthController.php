@@ -145,17 +145,77 @@ class AuthController
         require "Views/pages/dang-nhap.php";
     }
 
-    public function forgotPassword()
-    {
-        $userModel = $this->userModel;
-      
+   public function forgotPassword()
+{
+    $errors = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $email = trim($_POST['email'] ?? '');
+
+        if (empty($email)) {
+            $errors['email'] = "Vui lòng nhập email.";
+        } else {
+
+            $user = $this->userModel->getUserByEmailOnly($email);
+
+            if (!$user) {
+                $errors['email'] = "Email không tồn tại.";
+            } else {
+
+                $_SESSION['reset_user_id'] = $user['id'];
+
+                header("Location: ?pages=reset-password");
+                exit();
+            }
+        }
     }
 
-    public function resetPassword()
-    {
-        $userModel = $this->userModel;
-   
+    require "Views/pages/quen-mat-khau.php";
+}
+
+   public function resetPassword()
+{
+    $errors = [];
+
+    if (!isset($_SESSION['reset_user_id'])) {
+        header("Location: ?pages=quen-mat-khau");
+        exit();
     }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+        $password = $_POST['password'] ?? '';
+        $confirmPassword = $_POST['confirm_password'] ?? '';
+
+        if (empty($password)) {
+            $errors[] = "Vui lòng nhập mật khẩu mới.";
+        }
+
+        if (strlen($password) < 6) {
+            $errors[] = "Mật khẩu phải từ 6 ký tự trở lên.";
+        }
+
+        if ($password !== $confirmPassword) {
+            $errors[] = "Mật khẩu xác nhận không khớp.";
+        }
+
+        if (empty($errors)) {
+
+            $this->userModel->updatePasswordById(
+                $_SESSION['reset_user_id'],
+                $password
+            );
+
+            unset($_SESSION['reset_user_id']);
+
+            header("Location: ?pages=dang-nhap");
+            exit();
+        }
+    }
+
+    require "Views/pages/reset-password.php";
+}
 
     public function showLoginForm()
     {

@@ -31,6 +31,7 @@
                         <th>Trạng thái</th>
 
                         <th>Ngày đặt</th>
+                        <th>Chi tiết</th>
 
                     </tr>
 
@@ -90,6 +91,12 @@
                                 ) ?>
 
                             </td>
+                            <td>
+    <a href="?pages=chi-tiet-don-hang&id=<?= $order['id'] ?>"
+       class="btn btn-sm btn-primary">
+        Xem chi tiết
+    </a>
+</td>
 
                         </tr>
 

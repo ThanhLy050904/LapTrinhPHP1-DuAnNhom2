@@ -54,6 +54,14 @@ foreach ($cart as $item) {
         border-radius: 16px;
         padding: 20px;
     }
+    .cart-image,
+.detail-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+}
 </style>
 
 <main>
@@ -228,9 +236,11 @@ foreach ($cart as $item) {
                             <div
                                 class="d-flex align-items-center mb-4">
 
-                                <img
-                                    src="Views/image/<?= htmlspecialchars($item['image_main']) ?>"
-                                    class="product-image">
+                               <td>
+                                    <img src="<?= htmlspecialchars($item['image_main']) ?>"
+     class="detail-image"
+     alt="<?= htmlspecialchars($item['name']) ?>">
+                                </td>
 
                                 <div class="ms-3 flex-grow-1">
 

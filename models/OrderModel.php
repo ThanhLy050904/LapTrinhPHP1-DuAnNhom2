@@ -46,12 +46,19 @@ class OrderModel
         ]);
     }
 
-    public function getOrdersByUser($userId)
-    {
-        return $this->conn->prepare("SELECT * FROM orders WHERE user_id = ? ORDER BY id DESC")
-            ->execute([$userId]);
-    }
+   public function getOrdersByUser($userId)
+{
+    $stmt = $this->conn->prepare("
+        SELECT *
+        FROM orders
+        WHERE user_id = ?
+        ORDER BY id DESC
+    ");
 
+    $stmt->execute([$userId]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
     /* ================= ADMIN ================= */
 
     public function getAllOrders()

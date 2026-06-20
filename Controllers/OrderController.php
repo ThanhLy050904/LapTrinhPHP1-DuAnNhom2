@@ -124,4 +124,24 @@ class OrderController
         require
             "Views/pages/don-hang-cua-toi.php";
     }
+
+    public function detail()
+{
+    if (!isset($_SESSION['user'])) {
+        header("Location:?pages=dang-nhap");
+        exit;
+    }
+
+    $id = $_GET['id'] ?? 0;
+
+    $order = $this->orderModel->getOrderById($id);
+
+    if (!$order) {
+        die("Không tìm thấy đơn hàng");
+    }
+
+    $items = $this->orderModel->getOrderItems($id);
+
+    require "Views/pages/chi-tiet-don-hang.php";
+}
 }

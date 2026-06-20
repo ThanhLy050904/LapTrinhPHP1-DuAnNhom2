@@ -15,6 +15,7 @@ class HomeController
     {
         // ================= DANH MỤC (LẤY DB) =================
         $categories = $this->categoryModel->getAll();
+        
 
         // ================= SẢN PHẨM NỔI BẬT =================
         $featured_products = $this->productModel->getFeaturedProducts();

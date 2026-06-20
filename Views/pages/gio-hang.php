@@ -6,12 +6,14 @@ $total = 0;
 ?>
 
 <style>
-    .cart-image {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 16px;
-    }
+    .cart-image,
+.detail-image {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 12px;
+    display: block;
+}
 
     .qty-box {
         display: flex;
@@ -92,7 +94,9 @@ $total = 0;
 
                                 <!-- IMAGE -->
                                 <td>
-                                    <img src="Views/image/<?= htmlspecialchars($item['image_main']) ?>" class="cart-image">
+                                    <img src="<?= htmlspecialchars($item['image_main']) ?>"
+     class="detail-image"
+     alt="<?= htmlspecialchars($item['name']) ?>">
                                 </td>
 
                                 <td>

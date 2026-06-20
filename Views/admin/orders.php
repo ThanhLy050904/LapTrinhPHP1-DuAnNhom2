@@ -251,7 +251,6 @@ if ($adminAction === 'view' && $orderId) {
     }
 </style> -->
 
-<link rel="stylesheet" href="Views/css/admin.css">
 <div class="admin-wrapper-center">
     <div class="admin-box">
         <div class="admin-card">
