@@ -40,11 +40,11 @@ class UserModel
 
         return $stmt->execute([
             ':fullname' => $fullname,
-            ':email'    => $email,
+            ':email' => $email,
             ':password' => $hashedPassword,
-            ':phone'    => $phone,
-            ':address'  => $address,
-            ':avatar'   => $avatar
+            ':phone' => $phone,
+            ':address' => $address,
+            ':avatar' => $avatar
         ]);
     }
 
@@ -113,70 +113,77 @@ class UserModel
             ':id' => $id
         ]);
     }
-// ================= ADMIN FUNCTIONS =================
+    // ================= ADMIN FUNCTIONS =================
 
-public function getAll()
-{
-    $sql = "SELECT * FROM users ORDER BY id DESC";
-    return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-}
+    public function getAll()
+    {
+        $sql = "SELECT * FROM users ORDER BY id DESC";
+        return $this->conn->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-public function insert($data)
-{
-    $sql = "INSERT INTO users(full_name, email, password, role, created_at)
+    public function insert($data)
+    {
+        $sql = "INSERT INTO users(full_name, email, password, role, created_at)
             VALUES(?,?,?,?,NOW())";
 
-    $stmt = $this->conn->prepare($sql);
-    $password = password_hash($data['password'], PASSWORD_DEFAULT);
+        $stmt = $this->conn->prepare($sql);
+        $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-    return $stmt->execute([
-        $data['name'],
-        $data['email'],
-        $password,
-        $data['role']
-    ]);
-}
+        return $stmt->execute([
+            $data['name'],
+            $data['email'],
+            $password,
+            $data['role']
+        ]);
+    }
 
-public function update($id, $data)
-{
-    $sql = "UPDATE users 
+    public function update($id, $data)
+    {
+        $sql = "UPDATE users 
             SET full_name = ?, email = ?, role = ?, status = ?
             WHERE id = ?";
 
-    $stmt = $this->conn->prepare($sql);
+        $stmt = $this->conn->prepare($sql);
 
-    return $stmt->execute([
-        $data['name'],
-        $data['email'],
-        $data['role'],
-        $data['status'] ?? 'active',
-        $id
-    ]);
-}
+        return $stmt->execute([
+            $data['name'],
+            $data['email'],
+            $data['role'],
+            $data['status'] ?? 'active',
+            $id
+        ]);
+    }
 
-public function delete($id)
-{
-    $sql = "DELETE FROM users WHERE id = ?";
-    $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([$id]);
-}
+    public function delete($id)
+    {
+        $sql = "DELETE FROM users WHERE id = ?";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([$id]);
+    }
 
-public function lockUser($id, $reason)
-{
-    $sql = "UPDATE users SET status = 'locked', lock_reason = :reason WHERE id = :id";
-    $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([
-        ':reason' => $reason,
-        ':id' => $id
-    ]);
-}
+    public function lockUser($id, $reason)
+    {
+        $sql = "UPDATE users SET status = 'locked', lock_reason = :reason WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':reason' => $reason,
+            ':id' => $id
+        ]);
+    }
 
-public function unlockUser($id)
-{
-    $sql = "UPDATE users SET status = 'active', lock_reason = NULL WHERE id = :id";
-    $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([
-        ':id' => $id
-    ]);
-}
+    public function unlockUser($id)
+    {
+        $sql = "UPDATE users SET status = 'active', lock_reason = NULL WHERE id = :id";
+        $stmt = $this->conn->prepare($sql);
+        return $stmt->execute([
+            ':id' => $id
+        ]);
+    }
+    // Đếm tổng số người dùng
+    public function countUsers()
+    {
+        return $this->conn
+            ->query("SELECT COUNT(*) FROM users")
+            ->fetchColumn();
+    }
 }

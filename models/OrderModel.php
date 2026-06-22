@@ -46,19 +46,19 @@ class OrderModel
         ]);
     }
 
-   public function getOrdersByUser($userId)
-{
-    $stmt = $this->conn->prepare("
+    public function getOrdersByUser($userId)
+    {
+        $stmt = $this->conn->prepare("
         SELECT *
         FROM orders
         WHERE user_id = ?
         ORDER BY id DESC
     ");
 
-    $stmt->execute([$userId]);
+        $stmt->execute([$userId]);
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
     /* ================= ADMIN ================= */
 
     public function getAllOrders()
@@ -212,6 +212,41 @@ class OrderModel
         $stmt->execute([$id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function cancelOrder($orderId, $userId, $reason)
+    {
+        return $this->conn
+            ->prepare("
+            UPDATE orders
+            SET
+                status='da_huy',
+                cancel_reason=?
+            WHERE id=?
+            AND user_id=?
+            AND status IN(
+                'cho_xac_nhan',
+                'da_xac_nhan'
+            )
+        ")
+            ->execute([
+                $reason,
+                $orderId,
+                $userId
+            ]);
+    }
+
+    public function completeOrder($orderId, $userId)
+    {
+        return $this->conn
+            ->prepare("
+            UPDATE orders
+            SET status='hoan_thanh'
+            WHERE id=?
+            AND user_id=?
+            AND status='dang_giao'
+        ")
+            ->execute([$orderId, $userId]);
     }
 
 }

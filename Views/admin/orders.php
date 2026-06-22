@@ -395,13 +395,13 @@ if ($adminAction === 'view' && $orderId) {
                                             Đang giao
                                         </option>
 
-                                        <option value="hoan_thanh" <?= $o['status'] == 'hoan_thanh' ? 'selected' : '' ?>>
+                                        <!-- <option value="hoan_thanh" <?= $o['status'] == 'hoan_thanh' ? 'selected' : '' ?>>
                                             Hoàn thành
                                         </option>
 
                                         <option value="da_huy" <?= $o['status'] == 'da_huy' ? 'selected' : '' ?>>
                                             Đã hủy
-                                        </option>
+                                        </option> -->
 
                                     </select>
                                 </form>

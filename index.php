@@ -170,10 +170,19 @@ if (isset($_SESSION['user']['id'])) {
             $controller = new OrderController($pdo);
             $controller->myOrders();
             break;
+        case 'cancel-order':
+            $controller = new OrderController($pdo);
+            $controller->cancelOrder();
+            break;
+
+        case 'complete-order':
+            $controller = new OrderController($pdo);
+            $controller->completeOrder();
+            break;
         case 'chi-tiet-don-hang':
-    $controller = new OrderController($pdo);
-    $controller->detail();
-    break;
+            $controller = new OrderController($pdo);
+            $controller->detail();
+            break;
 
         case 'dat-hang-thanh-cong':
             require 'Views/pages/dat-hang-thanh-cong.php';
@@ -377,8 +386,7 @@ if (isset($_SESSION['user']['id'])) {
                             $controller->lock($id);
                         } elseif ($action === 'unlock') {
                             $controller->unlock($id);
-                        } 
-                        else {
+                        } else {
                             $controller->index();
                         }
                     }
@@ -386,7 +394,7 @@ if (isset($_SESSION['user']['id'])) {
                     // elseif ($section === 'dashboard') {
                     //     require_once "controllers/AdminAccountController.php";
                     //     $controller = new AdminAccountController($pdo);
-
+            
                     //     if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     //         $controller->store();
                     //     } elseif ($action === 'edit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -399,11 +407,17 @@ if (isset($_SESSION['user']['id'])) {
                     //         $controller->index();
                     //     }
                     // }
-
+            
                     // ================= DASHBOARD =================
                     else {
-                        echo "<h2>📊 Dashboard Admin</h2>";
-                        echo "<p>Chào mừng bạn đến trang quản trị KENZIE</p>";
+
+                        require_once
+                            "Controllers/AdminDashboardController.php";
+
+                        $controller =
+                            new AdminDashboardController($pdo);
+
+                        $controller->index();
                     }
 
                     ?>
@@ -420,9 +434,9 @@ if (isset($_SESSION['user']['id'])) {
             break;
     }
 
-if ($page !== 'admin') {
-    include "Views/layouts/footer.php";
-}    ?>
+    if ($page !== 'admin') {
+        include "Views/layouts/footer.php";
+    } ?>
 
 </body>
 

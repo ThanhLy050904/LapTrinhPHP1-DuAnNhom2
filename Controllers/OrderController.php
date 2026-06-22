@@ -5,11 +5,11 @@ class OrderController
     private $cartModel;
     private $orderModel;
 
-   public function __construct($pdo)
-{
-    $this->cartModel = new CartModel($pdo);
-    $this->orderModel = new OrderModel($pdo);
-}
+    public function __construct($pdo)
+    {
+        $this->cartModel = new CartModel($pdo);
+        $this->orderModel = new OrderModel($pdo);
+    }
 
     // Trang thanh toán
     public function checkout()
@@ -101,7 +101,7 @@ class OrderController
 
         $orders =
             $this->orderModel
-            ->getOrdersByUser($userId);
+                ->getOrdersByUser($userId);
 
         $statusText = [
             'cho_xac_nhan' => 'Chờ xác nhận',
@@ -126,22 +126,55 @@ class OrderController
     }
 
     public function detail()
-{
-    if (!isset($_SESSION['user'])) {
-        header("Location:?pages=dang-nhap");
+    {
+        if (!isset($_SESSION['user'])) {
+            header("Location:?pages=dang-nhap");
+            exit;
+        }
+
+        $id = $_GET['id'] ?? 0;
+
+        $order = $this->orderModel->getOrderById($id);
+
+        if (!$order) {
+            die("Không tìm thấy đơn hàng");
+        }
+
+        $items = $this->orderModel->getOrderItems($id);
+
+        require "Views/pages/chi-tiet-don-hang.php";
+    }
+    public function cancelOrder()
+    {
+        $id = $_POST['id'] ?? 0;
+
+        $reason =
+            $_POST['cancel_reason']
+            ?? '';
+
+        $this->orderModel->cancelOrder(
+            $id,
+            $_SESSION['user']['id'],
+            $reason
+        );
+
+        header(
+            "Location:?pages=chi-tiet-don-hang&id=" . $id
+        );
         exit;
     }
+    public function completeOrder()
+    {
+        $id = $_GET['id'];
 
-    $id = $_GET['id'] ?? 0;
+        $this->orderModel->completeOrder(
+            $id,
+            $_SESSION['user']['id']
+        );
 
-    $order = $this->orderModel->getOrderById($id);
-
-    if (!$order) {
-        die("Không tìm thấy đơn hàng");
+        header(
+            "Location:?pages=chi-tiet-don-hang&id=" . $id
+        );
+        exit;
     }
-
-    $items = $this->orderModel->getOrderItems($id);
-
-    require "Views/pages/chi-tiet-don-hang.php";
-}
 }
